@@ -1,0 +1,4 @@
+.idea/
+cmake-build-debug/
+SDL2/
+SDL2_mixer-2.0.4/
