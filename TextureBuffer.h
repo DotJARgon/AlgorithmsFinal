@@ -22,7 +22,7 @@ public:
     virtual void writePixel(int x, int y, int argb) = 0;
     virtual int getPixel(int x, int y) = 0;
 protected:
-    int* data;
+    int* data = nullptr;
 };
 
 #endif //FINALPROJECT_TEXTUREBUFFER_H

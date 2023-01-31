@@ -7,6 +7,7 @@
 #include "PlotterTexture.h"
 #include "InputHandler.h"
 #include "TextAtlas.h"
+#include "GridManager.h"
 
 using namespace std;
 
@@ -17,13 +18,19 @@ int testThread(void* params) {
 
 int main(int argc, char ** argv)
 {
-    TextAtlas* texture = TextureLoader::loadAtlas<TextAtlas>("textmap");
-    //Texture* texture = TextureLoader::test<Texture>(15, 10);
-    cout << texture->WIDTH << " by " << texture->HEIGHT << endl;
+    Texture* texture = TextureLoader::test<Texture>(20, 20);
+    TextAtlas* atlas = TextureLoader::loadAtlas<TextAtlas>("textmap");
 
     SDL_Plotter* g = new SDL_Plotter(500,500);
 
     PlotterTexture plotter(g);
+
+    GridManager* gridManager = new GridManager(500, 500, 2, 2);
+
+    gridManager->setGridElement(0, 0, texture);
+    gridManager->setGridElement(1, 1, texture);
+    gridManager->setGridElement(0, 1, atlas);
+    gridManager->setGridElement(1, 0, atlas);
 
     //InputHandler input;
 
@@ -33,12 +40,9 @@ int main(int argc, char ** argv)
     int mouseY = 250;
     int x,y;
 
-    double scaleX = 0.5;
-    double scaleY = 0.5;
-
     bool pressed = false;
-    int tw = 32;
-    texture->setTextWidth(tw);
+    int tw = 128;
+    atlas->setTextWidth(tw);
     double t = 0;
     while (!g->getQuit())
     {
@@ -46,37 +50,24 @@ int main(int argc, char ** argv)
         if(!stopped){
             long long t1 = std::chrono::system_clock::now().time_since_epoch().count();
             g->kbhit();
-            if(g->getKey() == '1' && !pressed) {
-                pressed = true;
-                if(tw < 255) tw ++;
+            if(g->getKey() == '1') {
+                gridManager->changeColumnWidth(1, 2.0);
+                gridManager->update();
             }
-            else if(g->getKey() != '1' && pressed) {
-                pressed = false;
-            }
-            else if(g->getKey() == '2' && !pressed) {
-                pressed = true;
-                if(tw > 0) tw--;
-            }
-            else if(g->getKey() != '2' && pressed) {
-                pressed = false;
-            }
-            texture->setTextWidth(tw);
+
             g->getMouseLocation(mouseX, mouseY);
             plotter.clear(0);
             //cout << scaleF << endl;
             double xp = ((double)mouseX) / plotter.WIDTH;
             double yp = ((double)mouseY) / plotter.HEIGHT;
-            scaleX = (sin(t1 / 300000000.0) + 1.5)*0.5;
-            scaleY = (cos(t1 / 300000000.0) + 1.5)*0.5;
-            texture->plot(&plotter, xp - scaleX * 0.5, yp - scaleY * 0.5, scaleX, scaleY);
+
+            gridManager->plot(&plotter, 0.0, 0.0, xp, yp);
 
             long long t2 = std::chrono::system_clock::now().time_since_epoch().count();
 
             if(t2 - t1 < 16) {
                 usleep(16-(t2-t1));
             }
-
-            //texture->plot(&plotter, 0, 0, 10.0, 10.0);
         }
 
         g->update();
