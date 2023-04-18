@@ -36,15 +36,24 @@ void Texture::plot(TextureBuffer* textureBuffer, double x, double y, double w, d
     }
 }
 
-void Texture::plot(TextureBuffer* textureBuffer, int x, int y, double scaleX, double scaleY, double ux1, double uy1, double ux2, double uy2) {
+void Texture::plot(TextureBuffer* textureBuffer, int x, int y, double scaleX, double scaleY, double ux1, double uy1, double ux2, double uy2, double rot) {
+    double cos_rot = cos(rot);
+    double sin_rot = sin(rot);
     for(int i = 0; i < this->WIDTH * scaleX; i++) {
         for(int j = 0; j < this->HEIGHT * scaleY; j++) {
             double sx = ((i / scaleX)*(ux2 - ux1)) + this->WIDTH*ux1;
             double sy = ((j / scaleY)*(uy2 - uy1)) + this->HEIGHT*uy1;
-            //double sx = i / scaleX;
-            //double sy = j / scaleY;
+
             int argb = this->getPixel(sx, sy);
-            textureBuffer->writePixel(x + i, y + j, argb);
+            if(!(argb&0xff000000)) {
+                double nx = i - this->WIDTH*scaleX*0.5;
+                double ny = j - this->HEIGHT*scaleY*0.5;
+
+                int x_pos = nx*cos_rot - ny*sin_rot + x;
+                int y_pos = nx*sin_rot + ny*cos_rot + y;
+
+                textureBuffer->writePixel(x_pos, y_pos, argb);
+            }
         }
     }
 }

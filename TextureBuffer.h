@@ -12,7 +12,7 @@ public:
 
     TextureBuffer(int width, int height): WIDTH(width), HEIGHT(height) {}
 
-    virtual void plot(TextureBuffer* textureBuffer, int x, int y, double scaleX, double scaleY, double ux1, double uy1, double ux2, double uy2) = 0;
+    virtual void plot(TextureBuffer* textureBuffer, int x, int y, double scaleX, double scaleY, double ux1, double uy1, double ux2, double uy2, double rot = 0.0) = 0;
     virtual void plot(TextureBuffer* textureBuffer, double x, double y, double w, double h) = 0;
 
     virtual void replaceData(int* data) = 0;

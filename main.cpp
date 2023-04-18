@@ -7,12 +7,15 @@
 #include "InputHandler.h"
 #include "TextAtlas.h"
 #include "GridManager.h"
+#include "MaskedTexture.h"
 
 using namespace std;
 
 int main(int argc, char ** argv)
 {
     Texture* texture = TextureLoader::test<Texture>(20, 20);
+    MaskedTexture* masked = TextureLoader::test<MaskedTexture>(40, 40);
+    Texture* mask = TextureLoader::test2<Texture>(40, 40);
     TextAtlas* atlas = TextureLoader::loadAtlas<TextAtlas>("textmap");
 
     SDL_Plotter* g = new SDL_Plotter(500,500);
@@ -28,6 +31,8 @@ int main(int argc, char ** argv)
 
     //InputHandler input;
 
+    masked->setMask(mask);
+
 
     bool stopped = false;
     int mouseX = 250;
@@ -39,10 +44,10 @@ int main(int argc, char ** argv)
     atlas->setTextWidth(tw);
     double t = 0;
     double test = 0;
-    double delta = .001;
+    double delta = .01;
     while (!g->getQuit())
     {
-        t += 0.1;
+        t += 0.01;
         test += delta;
         if(test > 1.0) {
             test = 1.0;
@@ -68,7 +73,9 @@ int main(int argc, char ** argv)
 
             gridManager->plot(&plotter, 0.0, 0.0, xp, yp);
 
-            texture->plot(&plotter, mouseX, mouseY, 6.0, 6.0, test, test, 1 - test, 1 - test);
+            //texture->plot(&plotter, mouseX, mouseY, 12.0, 6.0, test, test, 1 - test, 1 - test);
+            masked->plot(&plotter, mouseX, mouseY, 6.0, 6.0, test/2, test/2, 1 - test/2, 1 - test/2);
+
 
             long long t2 = std::chrono::system_clock::now().time_since_epoch().count();
 

@@ -9,7 +9,7 @@ using namespace std;
 
 GridManager::~GridManager() {}
 
-void GridManager::plot(TextureBuffer* textureBuffer, int x, int y, double scaleX, double scaleY, double ux1, double uy1, double ux2, double uy2) {}
+void GridManager::plot(TextureBuffer* textureBuffer, int x, int y, double scaleX, double scaleY, double ux1, double uy1, double ux2, double uy2, double rot) {}
 void GridManager::plot(TextureBuffer* textureBuffer, double x, double y, double w, double h) {
     for(int i = 0; i < this->rows; i++) {
         for(int j = 0; j < this->columns; j++) {

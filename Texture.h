@@ -14,7 +14,7 @@ public:
         this->data = new int[WIDTH*HEIGHT];
     }
     ~Texture();
-    void plot(TextureBuffer* textureBuffer, int x, int y, double scaleX, double scaleY, double ux1, double uy1, double ux2, double uy2);
+    void plot(TextureBuffer* textureBuffer, int x, int y, double scaleX, double scaleY, double ux1, double uy1, double ux2, double uy2, double rot = 0.0);
     void plot(TextureBuffer* textureBuffer, double x, double y, double w, double h);
     void replaceData(int* data);
     void copyData(int* data);

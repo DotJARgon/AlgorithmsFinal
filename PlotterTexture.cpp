@@ -4,7 +4,7 @@
 
 #include "PlotterTexture.h"
 
-void PlotterTexture::plot(TextureBuffer* textureBuffer, int x, int y, double scaleX, double scaleY, double ux1, double uy1, double ux2, double uy2) {}
+void PlotterTexture::plot(TextureBuffer* textureBuffer, int x, int y, double scaleX, double scaleY, double ux1, double uy1, double ux2, double uy2, double rot) {}
 void PlotterTexture::plot(TextureBuffer* textureBuffer, double x, double y, double w, double h) {}
 void PlotterTexture::replaceData(int* data) {}
 void PlotterTexture::copyData(int* data) {}
