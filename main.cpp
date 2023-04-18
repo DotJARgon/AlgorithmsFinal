@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cmath>
 #include <unistd.h>
 #include "SDL_Plotter.h"
 #include "TextureLoader.h"
@@ -10,11 +9,6 @@
 #include "GridManager.h"
 
 using namespace std;
-
-int testThread(void* params) {
-    cout << reinterpret_cast<int*>(params)[0] << endl;
-    return 0;
-}
 
 int main(int argc, char ** argv)
 {
@@ -44,9 +38,20 @@ int main(int argc, char ** argv)
     int tw = 128;
     atlas->setTextWidth(tw);
     double t = 0;
+    double test = 0;
+    double delta = .001;
     while (!g->getQuit())
     {
         t += 0.1;
+        test += delta;
+        if(test > 1.0) {
+            test = 1.0;
+            delta = -delta;
+        }
+        else if(test < 0.0) {
+            test = 0.0;
+            delta = -delta;
+        }
         if(!stopped){
             long long t1 = std::chrono::system_clock::now().time_since_epoch().count();
             g->kbhit();
@@ -62,6 +67,8 @@ int main(int argc, char ** argv)
             double yp = ((double)mouseY) / plotter.HEIGHT;
 
             gridManager->plot(&plotter, 0.0, 0.0, xp, yp);
+
+            texture->plot(&plotter, mouseX, mouseY, 6.0, 6.0, test, test, 1 - test, 1 - test);
 
             long long t2 = std::chrono::system_clock::now().time_since_epoch().count();
 

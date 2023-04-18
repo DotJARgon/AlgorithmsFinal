@@ -36,72 +36,15 @@ void Texture::plot(TextureBuffer* textureBuffer, double x, double y, double w, d
     }
 }
 
-void Texture::plot(TextureBuffer* textureBuffer, int x, int y, double scaleX, double scaleY) {
+void Texture::plot(TextureBuffer* textureBuffer, int x, int y, double scaleX, double scaleY, double ux1, double uy1, double ux2, double uy2) {
     for(int i = 0; i < this->WIDTH * scaleX; i++) {
         for(int j = 0; j < this->HEIGHT * scaleY; j++) {
-            /*if(scaleX < 1.0) {
-                int largb = this->getPixel(i / scaleX, j);
-                int rargb = this->getPixel(i / scaleX + 1, j);
-
-                double ix = i*scaleX;
-
-                int lx = (int) (i * scaleX);
-                int ux = lx + 1;
-
-                int wr = ((largb>>16)&0xff) * (ix - lx) + ((rargb>>16)&0xff) * (ux - ix);
-                int wg = ((largb>>8)&0xff) * (ix - lx) + ((rargb>>8)&0xff) * (ux - ix);
-                int wb = (largb&0xff) * (ix - lx) + (rargb&0xff) * (ux - ix);
-
-                textureBuffer->writePixel(x + i, y + j, (wr<<16) + (wg<<8) + wb);
-            }*/
-            if(this->INTERPOLATE) {
-                double sx = i / scaleX;
-                double sy = j / scaleY;
-                int argb = this->getPixel(sx, sy);
-
-                double pR = (argb>>16)&0xff;
-                double pG = (argb>>8)&0xff;
-                double pB = (argb)&0xff;
-
-                if(scaleX > 1.0) {
-                    double lowX = min(ceil(sx + 0.5), this->WIDTH-1.0);
-                    int argb2 = this->getPixel(lowX, sy);
-                    double pR2 = (argb2>>16)&0xff;
-                    double pG2 = (argb2>>8)&0xff;
-                    double pB2 = (argb2)&0xff;
-
-                    cout << (sx - floor(sx - 0.5)) << " + " << lowX - sx
-                    << " = " << (((sx - floor(sx - 0.5))) + (lowX - sx)) << endl;
-
-                    pR = (sx - floor(sx - 0.5)) * pR + (lowX - sx) * pR2;
-                    pG = (sx - floor(sx - 0.5)) * pG + (lowX - sx) * pG2;
-                    pB = (sx - floor(sx - 0.5)) * pB + (lowX - sx) * pB2;
-                    pR /= (((sx - floor(sx - 0.5))) + (lowX - sx));
-                    pG /= (((sx - floor(sx - 0.5))) + (lowX - sx));
-                    pB /= (((sx - floor(sx - 0.5))) + (lowX - sx));
-
-                }
-
-                int R = pR;
-                int G = pG;
-                int B = pB;
-
-                //cout << R << ", " << G << ", " << B << endl;
-
-                textureBuffer->writePixel(x + i, y + j, (R<<16) + (G<<8) + B);
-            }
-            else {
-                double sx = i / scaleX;
-                double sy = j / scaleY;
-                int argb = this->getPixel(sx, sy);
-                textureBuffer->writePixel(x + i, y + j, argb);
-            }
-
-
-
-
-
-
+            double sx = ((i / scaleX)*(ux2 - ux1)) + this->WIDTH*ux1;
+            double sy = ((j / scaleY)*(uy2 - uy1)) + this->HEIGHT*uy1;
+            //double sx = i / scaleX;
+            //double sy = j / scaleY;
+            int argb = this->getPixel(sx, sy);
+            textureBuffer->writePixel(x + i, y + j, argb);
         }
     }
 }

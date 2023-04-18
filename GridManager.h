@@ -91,7 +91,7 @@ public:
 
     ~GridManager();
 
-    void plot(TextureBuffer* textureBuffer, int x, int y, double scaleX, double scaleY);
+    void plot(TextureBuffer* textureBuffer, int x, int y, double scaleX, double scaleY, double ux1, double uy1, double ux2, double uy2);
     void plot(TextureBuffer* textureBuffer, double x, double y, double w, double h);
 
     void replaceData(int* data);

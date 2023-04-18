@@ -9,7 +9,7 @@ using namespace std;
 
 GridManager::~GridManager() {}
 
-void GridManager::plot(TextureBuffer* textureBuffer, int x, int y, double scaleX, double scaleY) {}
+void GridManager::plot(TextureBuffer* textureBuffer, int x, int y, double scaleX, double scaleY, double ux1, double uy1, double ux2, double uy2) {}
 void GridManager::plot(TextureBuffer* textureBuffer, double x, double y, double w, double h) {
     for(int i = 0; i < this->rows; i++) {
         for(int j = 0; j < this->columns; j++) {
@@ -27,8 +27,8 @@ void GridManager::plot(TextureBuffer* textureBuffer, double x, double y, double 
                     g.getBuffer()->plot(textureBuffer, x + g.getX() * w, y + g.getY() * h, g.getWidth() * w * newAspect, g.getHeight() * h);
                 }
                 else {
-                    cout << "dimensions[" << i << "][" << j << "]: " << g.getWidth() * w << ", " << g.getHeight() * h << endl;
-                    cout << "positions[" << i << "][" << j << "]:  " << g.getX() * w << ", " << g.getY() * h << endl;
+                    /*cout << "dimensions[" << i << "][" << j << "]: " << g.getWidth() * w << ", " << g.getHeight() * h << endl;
+                    cout << "positions[" << i << "][" << j << "]:  " << g.getX() * w << ", " << g.getY() * h << endl;*/
                     g.getBuffer()->plot(textureBuffer, x + g.getX() * w, y + g.getY() * h, g.getWidth() * w, g.getHeight() * h);
                 }
             }
@@ -50,7 +50,7 @@ void GridManager::writePixel(int x, int y, int argb) {
     this->backBuffer->writePixel(x, y, argb);
 }
 int GridManager::getPixel(int x, int y) {
-    this->backBuffer->getPixel(x, y);
+    return this->backBuffer->getPixel(x, y);
 }
 
 void GridManager::changeColumnWidth(int column, double width) {
@@ -78,9 +78,6 @@ void GridManager::update() {
         for(int i = 0; i < this->rows; i++) totalHeight += this->rowHeights[i];
         double totalWidth = 0;
         for(int i = 0; i < this->columns; i++) totalWidth += this->columnWidths[i];
-
-        cout << totalHeight << endl;
-        cout << totalWidth << endl;
 
         double y = 0;
         for(int i = 0; i < this->rows; i++) {
