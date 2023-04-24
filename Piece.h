@@ -21,22 +21,22 @@ enum Rotate {
 
 class Piece {
 private:
-    Edge left, top, right, bottom;
     vector<Piece> pieces;
-    int rotation;
     void rotateEdgesRight();
     void rotateEdgesLeft();
 public:
+    int rotation;
+    Edge left, top, right, bottom;
+    int absx, absy;
     int gridx, gridy;
     double x, y;
     double width, height;
     double ux, uy;
 
     Piece(Edge left, Edge top, Edge right, Edge bottom);
-    void rotate(double scaleX, double scaleY, Rotate rotation);
+    void rotate(Rotate rotation);
     bool canAdd(Piece& piece);
     void add(Piece& piece);
-
 };
 
 
