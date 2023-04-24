@@ -30,7 +30,27 @@ Piece::Piece(Edge left, Edge top, Edge right, Edge bottom) {
     this->ux = 0;
     this->uy = 0;
 
+    this->rows = 0;
+    this->cols = 0;
+
+    this->isSelected = false;
+
     this->rotation = 0;
+}
+
+void Piece::setGrid() {
+    if(this->pieces.size() == 0) {
+        this->gridx = int(this->x * this->rows);
+        this->gridy = int(this->y * this->cols);
+    }
+    else {
+        //all pieces are centered around a point so we need to take that
+        //into account
+        for(Piece& p : this->pieces) {
+            p.gridx = int((p.x + this->x) * this->rows);
+            p.gridy = int((p.y + this->y) * this->cols);
+        }
+    }
 }
 
 void Piece::rotateEdgesRight() {
@@ -62,7 +82,7 @@ void Piece::rotate(Rotate rotation) {
     else {
         //this is the case that this is a collection of
         //pieces
-        for(Piece p : this->pieces) {
+        for(Piece& p : this->pieces) {
             if(rotation == LEFT) this->rotateEdgesLeft();
             else if(rotation == RIGHT) this->rotateEdgesRight();
 
@@ -157,12 +177,12 @@ bool Piece::canAdd(Piece& piece) {
 
     if(this->pieces.size() == 0) myself.push_back(*this);
     else {
-        for(Piece p : this->pieces) myself.push_back(p);
+        for(Piece& p : this->pieces) myself.push_back(p);
     }
 
     if(piece.pieces.size() == 0) other.push_back(piece);
     else {
-        for(Piece p : piece.pieces) other.push_back(p);
+        for(Piece& p : piece.pieces) other.push_back(p);
     }
 
     return canFuse(myself, other);
@@ -175,9 +195,57 @@ void Piece::add(Piece& piece) {
 
     if(piece.pieces.size() == 0) this->pieces.push_back(piece);
     else {
-        for(Piece p : piece.pieces) this->pieces.push_back(p);
+        for(Piece& p : piece.pieces) this->pieces.push_back(p);
         //clear out all of the pieces of the other one since they are no
         //longer needed
         piece.pieces.clear();
+    }
+
+    //center the pieces
+    double avgx = 0;
+    double avgy = 0;
+
+    for(Piece& p : this->pieces) {
+        avgx += p.x;
+        avgy += p.y;
+    }
+    avgx /= this->pieces.size();
+    avgy /= this->pieces.size();
+    for(Piece& p : this->pieces) {
+        p.x -= avgx;
+        p.y -= avgy;
+    }
+}
+
+void Piece::drawSelf(Texture* texture, PlotterTexture* screen) {
+    if(this->isSelected) {
+        if(this->pieces.size() == 0) {
+            double r = rotation*3.1415926535 / 2.0;
+            texture->plot(screen, this->x, this->y, 1.0, 1.0, ux, uy, ux + width, uy + height, r);
+        }
+        else {
+            for(Piece& p : this->pieces) {
+                double x = p.x + this->x;
+                double y = p.y + this->y;
+                double r = p.rotation*3.1415926535 / 2.0;
+                texture->plot(screen, x, y, 1.0, 1.0, p.ux, p.uy, p.ux + p.width, p.uy + p.height, r);
+            }
+        }
+    }
+    else {
+        if(this->pieces.size() == 0) {
+            double x = double(gridx) / screen->WIDTH;
+            double y = double(gridy) / screen->HEIGHT;
+            double r = rotation*3.1415926535 / 2.0;
+            texture->plot(screen, x, y, 1.0, 1.0, ux, uy, ux + width, uy + height, r);
+        }
+        else {
+            for(Piece& p : this->pieces) {
+                double x = double(p.gridx) / screen->WIDTH;
+                double y = double(p.gridy) / screen->HEIGHT;
+                double r = p.rotation*3.1415926535 / 2.0;
+                texture->plot(screen, x, y, 1.0, 1.0, p.ux, p.uy, p.ux + p.width, p.uy + p.height, r);
+            }
+        }
     }
 }

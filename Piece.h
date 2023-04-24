@@ -8,6 +8,7 @@
 #include <vector>
 #include <cmath>
 #include "Texture.h"
+#include "PlotterTexture.h"
 
 using namespace std;
 
@@ -25,10 +26,12 @@ private:
     void rotateEdgesRight();
     void rotateEdgesLeft();
 public:
+    bool isSelected;
     int rotation;
     Edge left, top, right, bottom;
     int absx, absy;
     int gridx, gridy;
+    int rows, cols;
     double x, y;
     double width, height;
     double ux, uy;
@@ -37,6 +40,9 @@ public:
     void rotate(Rotate rotation);
     bool canAdd(Piece& piece);
     void add(Piece& piece);
+    void setGrid();
+
+    void drawSelf(Texture* texture, PlotterTexture* screen);
 };
 
 
