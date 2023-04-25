@@ -21,16 +21,16 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, Texture* textu
     for(int i = 0; i < num_cols; i++) {
         for(int j = 0; j < num_rows; j++) {
             Piece* piece = new Piece(FLAT, FLAT, FLAT, FLAT);
-            piece->absx = i;
-            piece->absy = j;
-            piece->gridx = i;
-            piece->gridy = j;
+            piece->absx = j;
+            piece->absy = i;
+            piece->gridx = j;
+            piece->gridy = i;
 
-            piece->x = double(i) / num_rows;
-            piece->y = double(j) / num_cols;
+            piece->x = double(j) / num_rows;
+            piece->y = double(i) / num_cols;
 
-            piece->ux = double(i) / num_rows;
-            piece->uy = double(j) / num_cols;
+            piece->ux = double(j) / num_rows;
+            piece->uy = double(i) / num_cols;
             piece->width = 1.0 / num_rows;
             piece->height = 1.0 / num_cols;
             piece->rotation = 0;

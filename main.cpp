@@ -20,7 +20,7 @@ int main(int argc, char ** argv)
 
     PlotterTexture plotter(g);
 
-    Board board(3, 3, &plotter, texture);
+    Board board(4, 3, &plotter, texture);
 
     bool stopped = false;
     int mouseX = 250;
@@ -56,7 +56,8 @@ int main(int argc, char ** argv)
                 usleep(16-(t2-t1));
             }*/
         }
-
+        SDL_PumpEvents();
+        SDL_FlushEvents(SDL_USEREVENT, SDL_LASTEVENT);
         g->update();
     }
 
