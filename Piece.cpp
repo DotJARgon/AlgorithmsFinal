@@ -68,23 +68,23 @@ void Piece::rotateEdgesLeft() {
     this->bottom = temp;
 }
 void Piece::rotate(Rotate rotation) {
-    if(rotation == LEFT) this->rotation = (this->rotation+1)%4;
-    else if(rotation == RIGHT) (this->rotation+3)%4;
+    if(rotation == LEFT_ROT) this->rotation = (this->rotation + 1) % 4;
+    else if(rotation == RIGHT_ROT) this->rotation = (this->rotation + 3) % 4;
 
     double cos_rot = cos(this->rotation*3.1415926535 / 2.0);
     double sin_rot = sin(this->rotation*3.1415926535 / 2.0);
 
     //case of this being the only piece
     if(this->pieces.size() == 0) {
-        if(rotation == LEFT) this->rotateEdgesLeft();
-        else if(rotation == RIGHT) this->rotateEdgesRight();
+        if(rotation == LEFT_ROT) this->rotateEdgesLeft();
+        else if(rotation == RIGHT_ROT) this->rotateEdgesRight();
     }
     else {
         //this is the case that this is a collection of
         //pieces
         for(Piece& p : this->pieces) {
-            if(rotation == LEFT) this->rotateEdgesLeft();
-            else if(rotation == RIGHT) this->rotateEdgesRight();
+            if(rotation == LEFT_ROT) this->rotateEdgesLeft();
+            else if(rotation == RIGHT_ROT) this->rotateEdgesRight();
 
             double dx = p.x - this->x;
             double dy = p.y - this->y;
@@ -218,33 +218,37 @@ void Piece::add(Piece& piece) {
 }
 
 void Piece::drawSelf(Texture* texture, PlotterTexture* screen) {
+
+    double scaleX = double(screen->WIDTH) / (this->rows*texture->WIDTH);
+    double scaleY = double(screen->HEIGHT) / (this->cols*texture->HEIGHT);
     if(this->isSelected) {
         if(this->pieces.size() == 0) {
             double r = rotation*3.1415926535 / 2.0;
-            texture->plot(screen, this->x, this->y, 1.0, 1.0, ux, uy, ux + width, uy + height, r);
+            texture->plot(screen, x*screen->WIDTH, y*screen->HEIGHT, scaleX, scaleY, ux, uy, ux + width, uy + height, r);
         }
         else {
             for(Piece& p : this->pieces) {
                 double x = p.x + this->x;
                 double y = p.y + this->y;
                 double r = p.rotation*3.1415926535 / 2.0;
-                texture->plot(screen, x, y, 1.0, 1.0, p.ux, p.uy, p.ux + p.width, p.uy + p.height, r);
+                texture->plot(screen, x*screen->WIDTH, y*screen->HEIGHT, scaleX, scaleY, p.ux, p.uy, p.ux + p.width, p.uy + p.height, r);
             }
         }
     }
     else {
         if(this->pieces.size() == 0) {
-            double x = double(gridx) / screen->WIDTH;
-            double y = double(gridy) / screen->HEIGHT;
-            double r = rotation*3.1415926535 / 2.0;
-            texture->plot(screen, x, y, 1.0, 1.0, ux, uy, ux + width, uy + height, r);
+            double x = double(gridx) / this->rows + 0.5 / this->rows;
+            double y = double(gridy) / this->cols + 0.5 / this->cols;
+
+            double r = this->rotation*3.1415926535 / 2.0;
+            texture->plot(screen, x*screen->WIDTH, y*screen->HEIGHT, scaleX, scaleY, ux, uy, ux + width, uy + height, r);
         }
         else {
             for(Piece& p : this->pieces) {
-                double x = double(p.gridx) / screen->WIDTH;
-                double y = double(p.gridy) / screen->HEIGHT;
+                double x = double(p.gridx) / this->rows;
+                double y = double(p.gridy) / this->cols;
                 double r = p.rotation*3.1415926535 / 2.0;
-                texture->plot(screen, x, y, 1.0, 1.0, p.ux, p.uy, p.ux + p.width, p.uy + p.height, r);
+                texture->plot(screen, x*screen->WIDTH, y*screen->HEIGHT, scaleX, scaleY, p.ux, p.uy, p.ux + p.width, p.uy + p.height, r);
             }
         }
     }

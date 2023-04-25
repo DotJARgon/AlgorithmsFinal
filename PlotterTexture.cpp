@@ -21,3 +21,7 @@ void PlotterTexture::writePixel(int x, int y, int argb) {
     }
 }
 int PlotterTexture::getPixel(int x, int y) {}
+
+SDL_Plotter* PlotterTexture::getPlotter() {
+    return this->plotter;
+}

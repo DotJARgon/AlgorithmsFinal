@@ -7,18 +7,12 @@
 
 #include <vector>
 #include <cmath>
+#include "Rotate.h"
+#include "Edge.h"
 #include "Texture.h"
 #include "PlotterTexture.h"
 
 using namespace std;
-
-enum Edge {
-    FLAT, ONE_INLET, ONE_OUTLET
-};
-
-enum Rotate {
-    LEFT, RIGHT
-};
 
 class Piece {
 private:

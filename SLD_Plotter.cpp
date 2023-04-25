@@ -52,8 +52,6 @@ SDL_Plotter::SDL_Plotter(int r, int c, bool WITH_SOUND){
 
     pixels   = new Uint32[col * row];
 
-    cout << "PIXELS:" << &(pixels) << endl;
-
     memset(pixels, WHITE, col * row * sizeof(Uint32));
 
     //SOUND Thread Pool
@@ -273,5 +271,4 @@ bool SDL_Plotter::getMouseMotion(int& x, int& y){
 
 void SDL_Plotter::getMouseLocation(int& x, int& y){
     SDL_GetMouseState( &x, &y );
-    cout << x << " " << y << endl;
 }

@@ -22,6 +22,8 @@ public:
     void clear(int argb);
     void writePixel(int x, int y, int argb);
     int getPixel(int x, int y);
+
+    SDL_Plotter* getPlotter();
 private:
     SDL_Plotter* plotter;
 };
