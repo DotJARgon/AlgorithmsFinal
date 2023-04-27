@@ -38,7 +38,6 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, Texture* textu
             piece->cols = num_cols;
 
             int rand = std::rand()%4;
-            cout << rand << endl;
 
             for(int i = 0; i < rand; i++) {
                 piece->rotate(RIGHT_ROT);
@@ -52,10 +51,9 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, Texture* textu
 Board::~Board() {}
 
 void Board::step() {
-    int x = 0;
-    int y = 0;
     this->plotter->getPlotter()->getMouseLocation(mousex, mousey);
-    clicked |= this->plotter->getPlotter()->getMouseClick(x, y);
+    clicked = this->plotter->getPlotter()->mouseClick();
+    if(clicked) this->plotter->getPlotter()->getMouseClick();
     double screenx = double(mousex) / plotter->WIDTH;
     double screeny = double(mousey) / plotter->HEIGHT;
     //as long as it is not null
@@ -63,17 +61,15 @@ void Board::step() {
         this->selected->x = screenx;
         this->selected->y = screeny;
 
-        if(this->plotter->getPlotter()->kbhit()) {
-            if(this->plotter->getPlotter()->getKey() == RIGHT_ARROW) {
-                this->selected->rotate(RIGHT_ROT);
-            }
-            else if(this->plotter->getPlotter()->getKey() == LEFT_ARROW) {
-                this->selected->rotate(LEFT_ROT);
-            }
+        char key = this->plotter->getPlotter()->getKey();
+        if(key == RIGHT_ARROW) {
+            this->selected->rotate(RIGHT_ROT);
+        }
+        else if(key == LEFT_ARROW) {
+            this->selected->rotate(LEFT_ROT);
         }
     }
 
-    if(clicked) cout << "is clicked: " << std::chrono::system_clock::now().time_since_epoch().count() << endl;
     if(clicked && this->selected == nullptr) {
         grab(mousex, mousey);
     }
@@ -81,30 +77,12 @@ void Board::step() {
         this->selected->setGrid();
         this->selected->isSelected = false;
         this->selected = nullptr;
-        /*for(int i = 0; i < this->board.size(); i++) {
-            if(!this->board.at(i)->isSelected) {
-
-            }
-        }*/
     }
 
     clicked = false;
 }
 void Board::draw() {
-    int x, y;
     for(Piece* p : this->board) {
-        if(this->selected) {
-            if(this->plotter->getPlotter()->kbhit()) {
-                if(this->plotter->getPlotter()->getKey() == RIGHT_ARROW) {
-                    this->selected->rotate(RIGHT_ROT);
-                }
-                else if(this->plotter->getPlotter()->getKey() == LEFT_ARROW) {
-                    this->selected->rotate(LEFT_ROT);
-                }
-            }
-        }
-        this->plotter->getPlotter()->getMouseLocation(mousex, mousey);
-        clicked |= this->plotter->getPlotter()->getMouseClick(x, y);
         if(p != this->selected) p->drawSelf(texture, plotter);
     }
     if(this->selected != nullptr) this->selected->drawSelf(texture, plotter);
