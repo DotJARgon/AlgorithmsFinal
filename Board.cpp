@@ -26,7 +26,7 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, Texture* textu
             piece->gridx = j;
             piece->gridy = i;
 
-            piece->x = double(j) / num_rows;
+            piece->x = 0.5*double(j) / num_rows;
             piece->y = double(i) / num_cols;
 
             piece->ux = double(j) / num_rows;
@@ -78,9 +78,11 @@ void Board::step() {
         bool collision = false;
         for(Piece* p : this->board) {
             if(p != this->selected) {
+                if(p->gridx == this->selected->gridx && p->gridy == this->selected->gridy) {
+                    collision = true;
+                    break;
+                }
                 if(p->isAdjacent(this->selected)) {
-                    cout << "esta: " << this->selected->gridx << " - " << this->selected->gridy << endl;
-                    cout << "esa:  " << p->gridx << " - " << p->gridy << endl;
                     if(!p->canInterlock(this->selected)) {
                         collision = true;
                         break;
