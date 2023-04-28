@@ -20,7 +20,7 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, Texture* textu
 
     for(int i = 0; i < num_cols; i++) {
         for(int j = 0; j < num_rows; j++) {
-            Piece* piece = new Piece(FLAT, FLAT, FLAT, FLAT);
+            Piece* piece = new Piece(FLAT, ONE_OUTLET, FLAT, ONE_INLET);
             piece->absx = j;
             piece->absy = i;
             piece->gridx = j;
@@ -75,8 +75,23 @@ void Board::step() {
     }
     else if(clicked) {
         this->selected->setGrid();
-        this->selected->isSelected = false;
-        this->selected = nullptr;
+        bool collision = false;
+        for(Piece* p : this->board) {
+            if(p != this->selected) {
+                if(p->isAdjacent(this->selected)) {
+                    cout << "esta: " << this->selected->gridx << " - " << this->selected->gridy << endl;
+                    cout << "esa:  " << p->gridx << " - " << p->gridy << endl;
+                    if(!p->canInterlock(this->selected)) {
+                        collision = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if(!collision) {
+            this->selected->isSelected = false;
+            this->selected = nullptr;
+        }
     }
 
     clicked = false;

@@ -16,7 +16,6 @@ using namespace std;
 
 class Piece {
 private:
-    vector<Piece> pieces;
     void rotateEdgesRight();
     void rotateEdgesLeft();
 public:
@@ -32,8 +31,8 @@ public:
 
     Piece(Edge left, Edge top, Edge right, Edge bottom);
     void rotate(Rotate rotation);
-    bool canAdd(Piece& piece);
-    void add(Piece& piece);
+    bool isAdjacent(Piece* piece);
+    bool canInterlock(Piece* piece);
     void setGrid();
 
     void drawSelf(Texture* texture, PlotterTexture* screen);
