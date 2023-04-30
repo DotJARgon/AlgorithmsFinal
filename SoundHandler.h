@@ -16,9 +16,17 @@ class SoundHandler {
 private:
     map<Sounds, string> sounds;
     SDL_Plotter* plotter;
+    bool special;
 public:
     SoundHandler(SDL_Plotter* plotter);
     void playSound(Sounds sound);
+    void playGrab();
+    void playDrop();
+    void playFail();
+    void playRight();
+    void playClick();
+    void playVictory();
+
 };
 
 

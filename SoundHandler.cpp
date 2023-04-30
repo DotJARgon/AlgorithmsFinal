@@ -3,6 +3,7 @@
 //
 
 #include "SoundHandler.h"
+#include "unistd.h"
 
 SoundHandler::SoundHandler(SDL_Plotter* plotter) {
     //populate the mapping
@@ -33,6 +34,10 @@ SoundHandler::SoundHandler(SDL_Plotter* plotter) {
     this->sounds.emplace(SPECIAL_DROP, "SpecialDrop.wav");
     this->sounds.emplace(SPECIAL_GRAB, "SpecialGrab.wav");
 
+    this->sounds.emplace(YEA_BABY, "Yea-Baby.wav");
+    this->special = false;
+
+
     for(const auto& sound_pair : this->sounds) {
         this->plotter->initSound(sound_pair.second);
     }
@@ -42,3 +47,117 @@ void SoundHandler::playSound(Sounds sound) {
     //play the sound corresponding to the mapping
     this->plotter->playSound(this->sounds.at(sound));
 }
+
+void SoundHandler::playClick() {
+    srand(time(nullptr));
+    int i = (rand() % 2) + 1;
+
+    switch (i) {
+        case 1:
+            this->plotter->playSound(this->sounds.at(CLICK1));
+            break;
+        case 2:
+            this->plotter->playSound(this->sounds.at(CLICK2));
+            break;
+        default:
+            cout << "if this prints we failed the project" << endl;
+    }
+
+}
+void SoundHandler::playDrop() {
+    srand(time(nullptr));
+    int i = (rand() % 3) + 1;
+
+    //uses the boolean variable to make sure if a special grab is used
+    //then special drop is always going to correspond with it.
+    if(this->special){
+        this->plotter->playSound(this->sounds.at(SPECIAL_DROP));
+        this->special = false;
+    }
+    else {
+        switch (i) {
+            case 1:
+                this->plotter->playSound(this->sounds.at(DROP1));
+                break;
+            case 2:
+                this->plotter->playSound(this->sounds.at(DROP2));
+                break;
+            case 3:
+                this->plotter->playSound(this->sounds.at(DROP3));
+                break;
+            default:
+                cout << "if this prints we failed the project" << endl;
+        }
+    }
+
+}
+void SoundHandler::playFail() {
+    srand(time(nullptr));
+    int i = (rand() % 4) + 1;
+
+    switch (i) {
+        case 1:
+            this->plotter->playSound(this->sounds.at(FAILED1));
+            break;
+        case 2:
+            this->plotter->playSound(this->sounds.at(FAILED2));
+            break;
+        case 3:
+            this->plotter->playSound(this->sounds.at(FAILED3));
+            break;
+        case 4:
+            this->plotter->playSound(this->sounds.at(FAILED1));
+            break;
+        default:
+            cout << "if this prints we failed the project" << endl;
+    }
+
+
+}
+void SoundHandler::playGrab() {
+    srand(time(nullptr));
+    int i = (rand() % 4) + 1;
+
+    switch (i) {
+        case 1:
+            this->plotter->playSound(this->sounds.at(GRAB1));
+            break;
+        case 2:
+            this->plotter->playSound(this->sounds.at(GRAB2));
+            break;
+        case 3:
+            this->plotter->playSound(this->sounds.at(GRAB3));
+            break;
+        case 4:
+            this->plotter->playSound(this->sounds.at(SPECIAL_GRAB));
+            this->special = true;
+            break;
+        default:
+            cout << "if this prints we failed the project" << endl;
+    }
+}
+void SoundHandler::playRight() {
+    srand(time(nullptr));
+    int i = (rand() % 4) + 1;
+
+    switch (i) {
+        case 1:
+            this->plotter->playSound(this->sounds.at(RIGHT1));
+            break;
+        case 2:
+            this->plotter->playSound(this->sounds.at(RIGHT2));
+            break;
+        case 3:
+            this->plotter->playSound(this->sounds.at(RIGHT3));
+            break;
+        case 4:
+            this->plotter->playSound(this->sounds.at(RIGHT4));
+            break;
+        default:
+            cout << "if this prints we failed the project" << endl;
+    }
+}
+void SoundHandler::playVictory() {
+    this->plotter->playSound(this->sounds.at(YEA_BABY));
+}
+
