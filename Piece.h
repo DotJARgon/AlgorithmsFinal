@@ -5,11 +5,15 @@
 #ifndef FINALPROJECT_PIECE_H
 #define FINALPROJECT_PIECE_H
 
+
+class PieceTexture;
+
 #include <vector>
 #include <cmath>
 #include "Rotate.h"
 #include "Edge.h"
 #include "Texture.h"
+#include "PieceTexture.h"
 #include "PlotterTexture.h"
 
 using namespace std;
@@ -36,7 +40,7 @@ public:
     bool areNeighbors(Piece* piece);
     void setGrid();
 
-    void drawSelf(Texture* texture, PlotterTexture* screen);
+    void drawSelf(PieceTexture* texture, PlotterTexture* screen);
 };
 
 

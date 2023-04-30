@@ -1,9 +1,10 @@
 #include <iostream>
+#include <chrono>
+
 #include "SDL_Plotter.h"
 #include "TextureLoader.h"
-#include "Texture.h"
+#include "PieceTexture.h"
 #include "PlotterTexture.h"
-#include "InputHandler.h"
 #include "Board.h"
 
 using namespace std;
@@ -12,7 +13,7 @@ int main(int argc, char ** argv)
 {
     //Texture* texture = TextureLoader::test<Texture>(20, 30);
 
-    Texture* puzzle = TextureLoader::loadImage<Texture>("puzzle.txt");
+    PieceTexture* puzzle = TextureLoader::loadImage<PieceTexture>("puzzle.txt");
 
     SDL_Plotter* g = new SDL_Plotter(500,1000);
 
@@ -20,9 +21,7 @@ int main(int argc, char ** argv)
 
     PlotterTexture plotter(g);
 
-    Board board(3, 3, &plotter, puzzle, soundHandler);
-
-    bool stopped = false;
+    Board board(2, 2, &plotter, puzzle, soundHandler);
 
     while (!g->getQuit() && !board.checkWin()){
         long long t1 = std::chrono::system_clock::now().time_since_epoch().count();

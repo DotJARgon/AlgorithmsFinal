@@ -4,9 +4,8 @@
 
 #include "Board.h"
 #include <random>
-#include <chrono>
 
-Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, Texture* texture, SoundHandler* soundHandler) {
+Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* texture, SoundHandler* soundHandler) {
     this->num_rows = num_rows;
     this->num_cols = num_cols;
     this->plotter = plotter;
@@ -112,14 +111,14 @@ void Board::step() {
         if(!collision) {
             this->selected->isSelected = false;
             this->selected = nullptr;
-            this->soundHandler->playSound(DROP1);
+            this->soundHandler->playGrab();
 
             if(allNeighbors && neighborCount > 0) {
-                this->soundHandler->playSound(RIGHT1);
+                this->soundHandler->playRight();
             }
         }
         else {
-            this->soundHandler->playSound(FAILED1);
+            this->soundHandler->playFail();
         }
     }
 

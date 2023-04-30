@@ -14,7 +14,7 @@
 class Board {
 private:
     PlotterTexture* plotter;
-    Texture* texture;
+    PieceTexture* texture;
     SoundHandler* soundHandler;
     int num_rows, num_cols;
     //double array of pieces, note, must cleanup eventually
@@ -25,7 +25,7 @@ private:
     int mousey;
     bool clicked;
 public:
-    Board(int num_rows, int num_cols, PlotterTexture* plotter, Texture* texture, SoundHandler* soundHandler);
+    Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* texture, SoundHandler* soundHandler);
     void grab(int mousex, int mousey);
     void step();
     void draw();

@@ -58,8 +58,8 @@ void Piece::rotateEdgesLeft() {
     this->bottom = temp;
 }
 void Piece::rotate(Rotate rotation) {
-    if(rotation == LEFT_ROT) this->rotation = (this->rotation + 1) % 4;
-    else if(rotation == RIGHT_ROT) this->rotation = (this->rotation + 3) % 4;
+    if(rotation == LEFT_ROT) this->rotation = (this->rotation + 3) % 4;
+    else if(rotation == RIGHT_ROT) this->rotation = (this->rotation + 1) % 4;
 
     double cos_rot = cos(this->rotation*3.1415926535 / 2.0);
     double sin_rot = sin(this->rotation*3.1415926535 / 2.0);
@@ -138,8 +138,7 @@ bool Piece::areNeighbors(Piece* piece) {
     return false;
 }
 
-void Piece::drawSelf(Texture* texture, PlotterTexture* screen) {
-
+void Piece::drawSelf(PieceTexture* texture, PlotterTexture* screen) {
     double scaleX = 0.5*double(screen->WIDTH) / (this->rows*texture->WIDTH);
     double scaleY = double(screen->HEIGHT) / (this->cols*texture->HEIGHT);
     if(this->isSelected) {
@@ -148,15 +147,15 @@ void Piece::drawSelf(Texture* texture, PlotterTexture* screen) {
         double y = double(gridy) / this->cols + 0.5 / this->cols;
 
         double r = this->rotation*3.1415926535 / 2.0;
-        texture->plot(screen, x*screen->WIDTH, y*screen->HEIGHT, scaleX, scaleY, ux, uy, ux + width, uy + height, r, true);
+        texture->plot(this, screen, x*screen->WIDTH, y*screen->HEIGHT, scaleX, scaleY, ux, uy, ux + width, uy + height, r, true);
 
-        texture->plot(screen, this->x*screen->WIDTH, this->y*screen->HEIGHT, scaleX, scaleY, ux, uy, ux + width, uy + height, r);
+        texture->plot(this, screen, this->x*screen->WIDTH, this->y*screen->HEIGHT, scaleX, scaleY, ux, uy, ux + width, uy + height, r);
     }
     else {
         double x = 0.5*double(gridx) / this->rows + 0.5 / this->rows;
         double y = double(gridy) / this->cols + 0.5 / this->cols;
 
         double r = this->rotation*3.1415926535 / 2.0;
-        texture->plot(screen, x*screen->WIDTH, y*screen->HEIGHT, scaleX, scaleY, ux, uy, ux + width, uy + height, r);
+        texture->plot(this, screen, x*screen->WIDTH, y*screen->HEIGHT, scaleX, scaleY, ux, uy, ux + width, uy + height, r);
     }
 }
