@@ -1,6 +1,6 @@
 #include <iostream>
 #include <chrono>
-
+#include <unistd.h>
 #include "SDL_Plotter.h"
 #include "TextureLoader.h"
 #include "PieceTexture.h"
@@ -31,6 +31,7 @@ int main(int argc, char ** argv)
         long long t2 = std::chrono::system_clock::now().time_since_epoch().count();
         g->update();
     }
+    sleep(7);
 
     return 0;
 }
