@@ -106,7 +106,7 @@ void SoundHandler::playFail() {
             this->plotter->playSound(this->sounds.at(FAILED3));
             break;
         case 4:
-            this->plotter->playSound(this->sounds.at(FAILED1));
+            this->plotter->playSound(this->sounds.at(FAILED4));
             break;
         default:
             cout << "if this prints we failed the project" << endl;

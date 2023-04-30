@@ -59,6 +59,7 @@ bool Board::checkWin() {
             return false;
         }
     }
+    this->soundHandler->playVictory();
     return true;
 }
 
@@ -84,7 +85,7 @@ void Board::step() {
 
     if(clicked && this->selected == nullptr) {
         grab(mousex, mousey);
-        this->soundHandler->playSound(GRAB1);
+        this->soundHandler->playGrab();
     }
     else if(clicked) {
         this->selected->setGrid();
@@ -112,14 +113,14 @@ void Board::step() {
         if(!collision) {
             this->selected->isSelected = false;
             this->selected = nullptr;
-            this->soundHandler->playSound(DROP1);
+            this->soundHandler->playDrop();
 
             if(allNeighbors && neighborCount > 0) {
-                this->soundHandler->playSound(RIGHT1);
+                this->soundHandler->playRight();
             }
         }
         else {
-            this->soundHandler->playSound(FAILED1);
+            this->soundHandler->playFail();
         }
     }
 
