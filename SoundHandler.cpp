@@ -5,6 +5,7 @@
 #include "SoundHandler.h"
 
 SoundHandler::SoundHandler(SDL_Plotter* plotter) {
+    //populate the mapping
     this->plotter = plotter;
     this->sounds.emplace(CLICK1, "Click-1.wav");
     this->sounds.emplace(CLICK2, "Click-2.wav");
@@ -38,5 +39,6 @@ SoundHandler::SoundHandler(SDL_Plotter* plotter) {
 
 }
 void SoundHandler::playSound(Sounds sound) {
+    //play the sound corresponding to the mapping
     this->plotter->playSound(this->sounds.at(sound));
 }

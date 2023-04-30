@@ -24,10 +24,10 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, Texture* textu
             Piece* piece = new Piece(FLAT, ONE_OUTLET, FLAT, ONE_INLET);
             piece->absx = j;
             piece->absy = i;
-            piece->gridx = j;
+            piece->gridx = j + num_rows;
             piece->gridy = i;
 
-            piece->x = 0.5*double(j) / num_rows;
+            piece->x = 0.5*double(j + num_rows) / num_rows;
             piece->y = double(i) / num_cols;
 
             piece->ux = double(j) / num_rows;
@@ -50,6 +50,17 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, Texture* textu
     }
 }
 Board::~Board() {}
+
+bool Board::checkWin() {
+    //cannot win if a piece is being held
+    if(this->selected) return false;
+    for(Piece* p : this->board) {
+        if(p->gridx != p->absx || p->gridy != p->absy) {
+            return false;
+        }
+    }
+    return true;
+}
 
 void Board::step() {
     this->plotter->getPlotter()->getMouseLocation(mousex, mousey);
@@ -78,6 +89,8 @@ void Board::step() {
     else if(clicked) {
         this->selected->setGrid();
         bool collision = false;
+        bool allNeighbors = true;
+        int neighborCount = 0;
         for(Piece* p : this->board) {
             if(p != this->selected) {
                 if(p->gridx == this->selected->gridx && p->gridy == this->selected->gridy) {
@@ -85,9 +98,13 @@ void Board::step() {
                     break;
                 }
                 if(p->isAdjacent(this->selected)) {
+                    neighborCount++;
                     if(!p->canInterlock(this->selected)) {
                         collision = true;
                         break;
+                    }
+                    if(!this->selected->areNeighbors(p)) {
+                        allNeighbors = false;
                     }
                 }
             }
@@ -95,7 +112,19 @@ void Board::step() {
         if(!collision) {
             this->selected->isSelected = false;
             this->selected = nullptr;
+            this->soundHandler->playSound(DROP1);
+
+            if(allNeighbors && neighborCount > 0) {
+                this->soundHandler->playSound(RIGHT1);
+            }
         }
+        else {
+            this->soundHandler->playSound(FAILED1);
+        }
+    }
+
+    if(this->selected) {
+        this->selected->setGrid();
     }
 
     clicked = false;
@@ -105,6 +134,8 @@ void Board::draw() {
         if(p != this->selected) p->drawSelf(texture, plotter);
     }
     if(this->selected != nullptr) this->selected->drawSelf(texture, plotter);
+
+
 }
 
 void Board::grab(int mousex, int mousey) {

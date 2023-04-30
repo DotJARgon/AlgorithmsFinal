@@ -46,7 +46,7 @@ public:
     */
     void plot(TextureBuffer* textureBuffer, int x, int y, 
         double scaleX, double scaleY, double ux1, double uy1, 
-        double ux2, double uy2, double rot = 0.0);
+        double ux2, double uy2, double rot = 0.0, bool lighten = false);
 
     /*
     * description: plots a TextureBuffer at a certain location

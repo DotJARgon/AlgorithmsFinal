@@ -143,8 +143,14 @@ void Piece::drawSelf(Texture* texture, PlotterTexture* screen) {
     double scaleX = 0.5*double(screen->WIDTH) / (this->rows*texture->WIDTH);
     double scaleY = double(screen->HEIGHT) / (this->cols*texture->HEIGHT);
     if(this->isSelected) {
-        double r = rotation*3.1415926535 / 2.0;
-        texture->plot(screen, x*screen->WIDTH, y*screen->HEIGHT, scaleX, scaleY, ux, uy, ux + width, uy + height, r);
+
+        double x = 0.5*double(gridx) / this->rows + 0.5 / this->rows;
+        double y = double(gridy) / this->cols + 0.5 / this->cols;
+
+        double r = this->rotation*3.1415926535 / 2.0;
+        texture->plot(screen, x*screen->WIDTH, y*screen->HEIGHT, scaleX, scaleY, ux, uy, ux + width, uy + height, r, true);
+
+        texture->plot(screen, this->x*screen->WIDTH, this->y*screen->HEIGHT, scaleX, scaleY, ux, uy, ux + width, uy + height, r);
     }
     else {
         double x = 0.5*double(gridx) / this->rows + 0.5 / this->rows;

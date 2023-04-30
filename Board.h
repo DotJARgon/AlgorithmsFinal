@@ -29,6 +29,7 @@ public:
     void grab(int mousex, int mousey);
     void step();
     void draw();
+    bool checkWin();
     ~Board();
 };
 
