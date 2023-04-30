@@ -14,13 +14,17 @@ using namespace std;
 
 int main(int argc, char ** argv)
 {
-    Texture* texture = TextureLoader::test<Texture>(20, 30);
+    //Texture* texture = TextureLoader::test<Texture>(20, 30);
+
+    Texture* puzzle = TextureLoader::loadImage<Texture>("puzzle.txt");
 
     SDL_Plotter* g = new SDL_Plotter(500,1000);
 
+    SoundHandler* soundHandler = new SoundHandler(g);
+
     PlotterTexture plotter(g);
 
-    Board board(4, 4, &plotter, texture);
+    Board board(4, 4, &plotter, puzzle, soundHandler);
 
     bool stopped = false;
     int mouseX = 250;

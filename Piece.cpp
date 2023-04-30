@@ -87,6 +87,56 @@ bool Piece::canInterlock(Piece* piece) {
     }
     return false;
 }
+bool Piece::areNeighbors(Piece* piece) {
+    //this checks whether the pieces are meant to be next to eachother
+    //on the board and match on the correct side
+    bool adj = this->isAdjacent(piece);
+    int adx = piece->absx - this->absx;
+    int ady = piece->absy - this->absy;
+    //if their absolute positions are not adjacent, then it should return false
+    //immediately
+    if(!((abs(adx) == 1 && ady == 0) || (abs(ady) == 1 && adx == 0))) return false;
+    //if they are adjacent we can check if they are neighbors
+    if(adj) {
+        //if the rotations match
+        //if they do not that side should not be connected
+        if(this->rotation == piece->rotation) {
+            //get the grid dx and dy
+            int dx = piece->gridx - this->gridx;
+            int dy = piece->gridy - this->gridy;
+
+            if(adx == 1 && ady == 0) {
+                if(this->rotation == 0) return dx ==  1; //no rotation
+                if(this->rotation == 1) return dy ==  1; //90 degree ccw
+                if(this->rotation == 2) return dx == -1; //180 degrees ccw
+                if(this->rotation == 3) return dy == -1; //270 degrees ccw
+            }
+
+            if(adx == -1 && ady == 0) {
+                if(this->rotation == 0) return dx == -1; //no rotation
+                if(this->rotation == 1) return dy == -1; //90 degree ccw
+                if(this->rotation == 2) return dx ==  1; //180 degrees ccw
+                if(this->rotation == 3) return dy ==  1; //270 degrees ccw
+            }
+
+            if(adx == 0 && ady == 1) {
+                if(this->rotation == 0) return dy ==  1; //no rotation
+                if(this->rotation == 1) return dx == -1; //90 degree ccw
+                if(this->rotation == 2) return dy == -1; //180 degrees ccw
+                if(this->rotation == 3) return dx ==  1; //270 degrees ccw
+            }
+
+            if(adx == 0 && ady == -1) {
+                if(this->rotation == 0) return dy == -1; //no rotation
+                if(this->rotation == 1) return dx ==  1; //90 degree ccw
+                if(this->rotation == 2) return dy ==  1; //180 degrees ccw
+                if(this->rotation == 3) return dx == -1; //270 degrees ccw
+            }
+        }
+        else return false;
+    }
+    return false;
+}
 
 void Piece::drawSelf(Texture* texture, PlotterTexture* screen) {
 

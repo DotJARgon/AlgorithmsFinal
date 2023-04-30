@@ -9,11 +9,13 @@
 #include "Texture.h"
 #include "PlotterTexture.h"
 #include "Piece.h"
+#include "SoundHandler.h"
 
 class Board {
 private:
     PlotterTexture* plotter;
     Texture* texture;
+    SoundHandler* soundHandler;
     int num_rows, num_cols;
     //double array of pieces, note, must cleanup eventually
     //x by y will be the coordinates
@@ -23,7 +25,7 @@ private:
     int mousey;
     bool clicked;
 public:
-    Board(int num_rows, int num_cols, PlotterTexture* plotter, Texture* texture);
+    Board(int num_rows, int num_cols, PlotterTexture* plotter, Texture* texture, SoundHandler* soundHandler);
     void grab(int mousex, int mousey);
     void step();
     void draw();

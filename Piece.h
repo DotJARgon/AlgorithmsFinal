@@ -33,6 +33,7 @@ public:
     void rotate(Rotate rotation);
     bool isAdjacent(Piece* piece);
     bool canInterlock(Piece* piece);
+    bool areNeighbors(Piece* piece);
     void setGrid();
 
     void drawSelf(Texture* texture, PlotterTexture* screen);

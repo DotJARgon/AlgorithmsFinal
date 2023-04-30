@@ -6,11 +6,12 @@
 #include <random>
 #include <chrono>
 
-Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, Texture* texture) {
+Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, Texture* texture, SoundHandler* soundHandler) {
     this->num_rows = num_rows;
     this->num_cols = num_cols;
     this->plotter = plotter;
     this->texture = texture;
+    this->soundHandler = soundHandler;
 
     this->mousex = 0;
     this->mousey = 0;
@@ -72,6 +73,7 @@ void Board::step() {
 
     if(clicked && this->selected == nullptr) {
         grab(mousex, mousey);
+        this->soundHandler->playSound(GRAB1);
     }
     else if(clicked) {
         this->selected->setGrid();

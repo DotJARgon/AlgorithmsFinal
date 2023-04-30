@@ -25,10 +25,12 @@ public:
 
         int* data = new int[width*height];
 
-        string line;
+        //string line;
         int i = 0;
-        while(getline(in, line)) {
-            int argb = stoi(line);
+        while(!in.eof()) {
+            int r, g, b;
+            in >> r >> g >> b;
+            int argb = (r << 16) | (g << 8) | b;
             data[i++] = argb;
         }
 
