@@ -13,7 +13,35 @@ int main(int argc, char ** argv)
 {
     //Texture* texture = TextureLoader::test<Texture>(20, 30);
 
-    PieceTexture* puzzle = TextureLoader::loadImage<PieceTexture>("puzzle.txt");
+    vector<string> fileName = {"lion.txt", "hogsmeade.txt"};
+    int userInputDif, userInputPic;
+    //TODO Just doing this console input until we get the texture class working for SDL if we do
+    cout << "What difficulty?\n1.) Easy - 2x2\n2.) Medium - 4x4\n3.) Hard - 8x8\n";
+
+    cin >> userInputDif;
+    switch (userInputDif){
+        case 1:
+            userInputDif = 2;
+            break;
+        case 2:
+            userInputDif = 4;
+            break;
+        case 3:
+            userInputDif = 8;
+            break;
+        default:
+            cout << "Not a valid option...\nRestart program";
+            return 0;
+    }
+
+
+    cout << "What picture would you like to use?" << endl;
+    for(int i = 0; i < fileName.size(); i++){
+        cout << i + 1 << ".) " << fileName.at(i) << endl;
+    }
+    cout << endl;
+    cin >> userInputPic;
+    PieceTexture* puzzle = TextureLoader::loadImage<PieceTexture>(fileName.at(userInputPic - 1));
 
     SDL_Plotter* g = new SDL_Plotter(500,1000);
 
@@ -21,7 +49,8 @@ int main(int argc, char ** argv)
 
     PlotterTexture plotter(g);
 
-    Board board(4, 4, &plotter, puzzle, soundHandler);
+
+    Board board(userInputDif, userInputDif, &plotter, puzzle, soundHandler);
 
     long long start = std::chrono::system_clock::now().time_since_epoch().count();
     bool started = false;

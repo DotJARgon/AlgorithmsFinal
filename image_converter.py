@@ -2,7 +2,7 @@ from PIL import Image
 from PIL import ImageColor
 
 
-name = input('Enter File Name')
+name = input('Enter File Name: ')
 #name = 'graphic'
 img = Image.open(name)
 f = open(name + '.txt','w')

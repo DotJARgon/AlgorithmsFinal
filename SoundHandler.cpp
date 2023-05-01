@@ -34,6 +34,7 @@ SoundHandler::SoundHandler(SDL_Plotter* plotter) {
     this->sounds.emplace(SPECIAL_DROP, "SpecialDrop.wav");
     this->sounds.emplace(SPECIAL_GRAB, "SpecialGrab.wav");
 
+    //TODO might redo this sound to make it more emphazised
     this->sounds.emplace(YEA_BABY, "Yea-Baby.wav");
     this->special = false;
 
@@ -164,6 +165,7 @@ void SoundHandler::playVictory() {
     this->plotter->playSound(this->sounds.at(YEA_BABY));
 }
 
+//TODO ill add in the music randomization later
 void SoundHandler::playMusic() {
     this->plotter->playSound(this->sounds.at(GRAZE_ON_THE_ROOF));
 }
