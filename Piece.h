@@ -1,6 +1,13 @@
-//
-// Created by Marcelo on 4/22/2023.
-//
+/*
+* Authors: Tristan Brown, Marcelo Carpenter, Thomas Cho,
+*          Joshua Linnett, Aaron Mendoza, Harrison Williams
+* Assignment Title: Jigsaw Puzzles Epic
+* Assignment Description: This program allows users to solve a puzzle using
+*                         their own images.
+* Due Date: 5/2/2023
+* Date Created: 4/22/2023
+* Date Last Modified: 4/30/2023
+*/
 
 #ifndef FINALPROJECT_PIECE_H
 #define FINALPROJECT_PIECE_H
