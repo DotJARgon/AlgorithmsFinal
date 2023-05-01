@@ -7,6 +7,7 @@
 void PieceTexture::plot(Piece* p, TextureBuffer* textureBuffer, int x, int y, double scaleX, double scaleY, double ux1, double uy1, double ux2, double uy2, double rot, bool lighten) {
     double cos_rot = cos(rot);
     double sin_rot = sin(rot);
+
     for(int i = 0; i < this->WIDTH * scaleX; i++) {
         for(int j = 0; j < this->HEIGHT * scaleY; j++) {
             double sx = ((i / scaleX)*(ux2 - ux1)) + this->WIDTH*ux1;
@@ -49,6 +50,21 @@ void PieceTexture::plot(Piece* p, TextureBuffer* textureBuffer, int x, int y, do
                     if(dx*dx + dy*dy > this->HEIGHT*0.5) textureBuffer->writePixel(x_pos, y_pos, argb);
                 }
                 else textureBuffer->writePixel(x_pos, y_pos, argb);
+            }
+        }
+
+        if(p->top == ONE_OUTLET) {
+
+            for(int i = 0; i < this->WIDTH * scaleX * 0.5; i++) {
+                for(int j = 0; j < this->HEIGHT * scaleY * 0.5; j++) {
+                    double x_pos = i - this->WIDTH * scaleX * 0.5 + x;
+                    double y_pos = j - this->HEIGHT * scaleY * 0.5 + y;
+                    double dx = x_pos - x;
+                    double dy = y_pos - y;
+                    if(dx*dx + dy*dy < this->WIDTH*0.25) {
+                        textureBuffer->writePixel(x_pos, y_pos, 0);
+                    }
+                }
             }
         }
     }
