@@ -5,6 +5,21 @@
 #include "Board.h"
 #include <random>
 
+void randomEdge(Edge& e1, Edge& e2) {
+    int r = rand()%3;
+    if(r == 0) {
+        e1 = ONE_OUTLET;
+        e2 = ONE_INLET;
+    }
+    else if(r == 1) {
+        e1 = ONE_INLET;
+        e2 = ONE_OUTLET;
+    }
+    else {
+        e1 = e2 = FLAT;
+    }
+}
+
 Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* texture, SoundHandler* soundHandler) {
     this->num_rows = num_rows;
     this->num_cols = num_cols;
@@ -18,7 +33,10 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* 
 
     this->selected = nullptr;
 
+    vector<vector<Piece*>> tempGrid;
+
     for(int i = 0; i < num_cols; i++) {
+        vector<Piece*> row;
         for(int j = 0; j < num_rows; j++) {
             Piece* piece = new Piece(FLAT, ONE_OUTLET, FLAT, ONE_INLET);
             piece->absx = j;
@@ -36,17 +54,42 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* 
             piece->rotation = 0;
             piece->rows = num_rows;
             piece->cols = num_cols;
-
-            int rand = std::rand()%4;
-
-            for(int i = 0; i < rand; i++) {
-                piece->rotate(RIGHT_ROT);
-            }
-
             this->board.push_back(piece);
+            row.push_back(piece);
         }
-        
+
+        tempGrid.push_back(row);
     }
+
+    for(int i = 0; i < num_cols; i++) {
+        for(int j = 0; j < num_rows; j++) {
+            Piece* p = tempGrid.at(i).at(j);
+
+            if(j == 0) p->left = FLAT;
+            else if(j == num_rows-1) p->right = FLAT;
+            if(i == 0) p->top = FLAT;
+            else if(i == num_cols-1) p->bottom = FLAT;
+        }
+    }
+
+    for(int i = 0; i < num_cols; i++) {
+        for(int j = 0; j < num_rows; j++) {
+            Piece* p = tempGrid.at(i).at(j);
+
+            if(j == 0) p->left = FLAT;
+            else if(j == num_rows-1) p->right = FLAT;
+            if(i == 0) p->top = FLAT;
+            else if(i == num_cols-1) p->bottom = FLAT;
+        }
+    }
+
+    for(Piece* p : this->board) {
+        int rand = std::rand()%4;
+        for(int i = 0; i < rand; i++) {
+            p->rotate(RIGHT_ROT);
+        }
+    }
+
 }
 Board::~Board() {}
 
@@ -135,8 +178,6 @@ void Board::draw() {
         if(p != this->selected) p->drawSelf(texture, plotter);
     }
     if(this->selected != nullptr) this->selected->drawSelf(texture, plotter);
-
-
 }
 
 void Board::grab(int mousex, int mousey) {
@@ -151,7 +192,7 @@ void Board::grab(int mousex, int mousey) {
         p->isSelected = false;
         double dx = p->x - screenx;
         double dy = p->y - screeny;
-        double d = dx*dx + dy*dy;
+        double d = abs(dx) + abs(dy);
         if(d < dist) {
             dist = d;
             this->selected = p;
