@@ -23,15 +23,22 @@ int main(int argc, char ** argv)
 
     Board board(2, 2, &plotter, puzzle, soundHandler);
 
+    long long start = std::chrono::system_clock::now().time_since_epoch().count();
+    bool started = false;
+
     while (!g->getQuit() && !board.checkWin()){
         long long t1 = std::chrono::system_clock::now().time_since_epoch().count();
+        if(t1 - start > 500000000 && !started) {
+            started = true;
+            soundHandler->playMusic();
+        }
         plotter.clear(0);
         board.step();
         board.draw();
         long long t2 = std::chrono::system_clock::now().time_since_epoch().count();
         g->update();
     }
-    sleep(7);
+    sleep(6);
 
     return 0;
 }

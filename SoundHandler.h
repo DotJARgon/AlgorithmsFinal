@@ -90,6 +90,7 @@ public:
      * postcondition: plays the victory audio
      */
     void playVictory();
+    void playMusic();
 
 };
 

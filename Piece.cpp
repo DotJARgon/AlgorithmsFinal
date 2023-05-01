@@ -143,19 +143,19 @@ void Piece::drawSelf(PieceTexture* texture, PlotterTexture* screen) {
     double scaleY = double(screen->HEIGHT) / (this->cols*texture->HEIGHT);
     if(this->isSelected) {
 
-        double x = 0.5*double(gridx) / this->rows + 0.5 / this->rows;
-        double y = double(gridy) / this->cols + 0.5 / this->cols;
+        double xT = 0.5*double(gridx) / this->rows + 0.5 / this->rows;
+        double yT = double(gridy) / this->cols + 0.5 / this->cols;
 
         double r = this->rotation*3.1415926535 / 2.0;
-        texture->plot(this, screen, x*screen->WIDTH, y*screen->HEIGHT, scaleX, scaleY, ux, uy, ux + width, uy + height, r, true);
+        texture->plot(this, screen, xT*screen->WIDTH, yT*screen->HEIGHT, scaleX, scaleY, ux, uy, ux + width, uy + height, r, true);
 
-        texture->plot(this, screen, this->x*screen->WIDTH, this->y*screen->HEIGHT, scaleX, scaleY, ux, uy, ux + width, uy + height, r);
+        texture->plot(this, screen, this->x*screen->WIDTH, this->y*screen->HEIGHT, scaleX, scaleY, ux, uy, ux + width, uy + height, r, false);
     }
     else {
-        double x = 0.5*double(gridx) / this->rows + 0.5 / this->rows;
-        double y = double(gridy) / this->cols + 0.5 / this->cols;
+        double xT = 0.5*double(gridx) / this->rows + 0.5 / this->rows;
+        double yT = double(gridy) / this->cols + 0.5 / this->cols;
 
         double r = this->rotation*3.1415926535 / 2.0;
-        texture->plot(this, screen, x*screen->WIDTH, y*screen->HEIGHT, scaleX, scaleY, ux, uy, ux + width, uy + height, r);
+        texture->plot(this, screen, xT*screen->WIDTH, yT*screen->HEIGHT, scaleX, scaleY, ux, uy, ux + width, uy + height, r, false);
     }
 }

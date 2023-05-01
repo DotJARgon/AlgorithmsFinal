@@ -42,6 +42,8 @@ SoundHandler::SoundHandler(SDL_Plotter* plotter) {
         this->plotter->initSound(sound_pair.second);
     }
 
+
+
 }
 void SoundHandler::playSound(Sounds sound) {
     //play the sound corresponding to the mapping
@@ -158,6 +160,10 @@ void SoundHandler::playRight() {
     }
 }
 void SoundHandler::playVictory() {
+    this->plotter->quitSound(this->sounds.at(GRAZE_ON_THE_ROOF));
     this->plotter->playSound(this->sounds.at(YEA_BABY));
 }
 
+void SoundHandler::playMusic() {
+    this->plotter->playSound(this->sounds.at(GRAZE_ON_THE_ROOF));
+}

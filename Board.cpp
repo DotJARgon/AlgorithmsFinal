@@ -170,7 +170,6 @@ void Board::step() {
     if(this->selected) {
         this->selected->setGrid();
     }
-
     clicked = false;
 }
 void Board::draw() {
