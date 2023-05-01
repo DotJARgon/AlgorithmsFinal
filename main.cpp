@@ -21,7 +21,7 @@ int main(int argc, char ** argv)
 
     PlotterTexture plotter(g);
 
-    Board board(2, 2, &plotter, puzzle, soundHandler);
+    Board board(4, 4, &plotter, puzzle, soundHandler);
 
     long long start = std::chrono::system_clock::now().time_since_epoch().count();
     bool started = false;

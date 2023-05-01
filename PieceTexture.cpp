@@ -7,6 +7,7 @@
 void PieceTexture::plot(Piece* p, TextureBuffer* textureBuffer, int x, int y, double scaleX, double scaleY, double ux1, double uy1, double ux2, double uy2, double rot, bool lighten) {
 
     double r = 0.01;
+    double r2 = sqrt(r);
 
     double cos_rot = cos(rot);
     double sin_rot = sin(rot);
@@ -36,59 +37,95 @@ void PieceTexture::plot(Piece* p, TextureBuffer* textureBuffer, int x, int y, do
                 double yp = (y_pos - y) / (this->HEIGHT * scaleY);
 
                 //parts to draw
-                if(p->right == ONE_OUTLET) {
+                if(p->right == CIRCLE_OUTLET || p->right == SQUARE_OUTLET) {
                     double dx = xp-0.5;
                     double dy = yp;
-                    if(dx*dx + dy*dy < r) {
-                        textureBuffer->writePixel(x_pos, y_pos, argb);
-                        continue;
+                    if(p->right == CIRCLE_OUTLET) {
+                        if(dx*dx + dy*dy < r) {
+                            textureBuffer->writePixel(x_pos, y_pos, argb);
+                            continue;
+                        }
+                    }
+                    else if(p->right == SQUARE_OUTLET) {
+                        if(abs(dx) < r2  && abs(dy) < r2) {
+                            textureBuffer->writePixel(x_pos, y_pos, argb);
+                            continue;
+                        }
                     }
                 }
-                if(p->left == ONE_OUTLET) {
+                if(p->left == CIRCLE_OUTLET || p->left == SQUARE_OUTLET) {
                     double dx = xp+0.5;
                     double dy = yp;
-                    if(dx*dx + dy*dy < r) {
-                        textureBuffer->writePixel(x_pos, y_pos, argb);
-                        continue;
+                    if(p->left == CIRCLE_OUTLET) {
+                        if(dx*dx + dy*dy < r) {
+                            textureBuffer->writePixel(x_pos, y_pos, argb);
+                            continue;
+                        }
+                    }
+                    else if(p->left == SQUARE_OUTLET) {
+                        if(abs(dx) < r2  && abs(dy) < r2) {
+                            textureBuffer->writePixel(x_pos, y_pos, argb);
+                            continue;
+                        }
                     }
                 }
-                if(p->bottom == ONE_OUTLET) {
+                if(p->bottom == CIRCLE_OUTLET || p->bottom == SQUARE_OUTLET) {
                     double dx = xp;
                     double dy = yp - 0.5;
-                    if(dx*dx + dy*dy < r) {
-                        textureBuffer->writePixel(x_pos, y_pos, argb);
-                        continue;
+                    if(p->bottom == CIRCLE_OUTLET) {
+                        if(dx*dx + dy*dy < r) {
+                            textureBuffer->writePixel(x_pos, y_pos, argb);
+                            continue;
+                        }
+                    }
+                    else if(p->bottom == SQUARE_OUTLET) {
+                        if(abs(dx) < r2  && abs(dy) < r2) {
+                            textureBuffer->writePixel(x_pos, y_pos, argb);
+                            continue;
+                        }
                     }
                 }
-                if(p->top == ONE_OUTLET) {
+                if(p->top == CIRCLE_OUTLET || p->top == SQUARE_OUTLET) {
                     double dx = xp;
                     double dy = yp + 0.5;
-                    if(dx*dx + dy*dy < r) {
-                        textureBuffer->writePixel(x_pos, y_pos, argb);
-                        continue;
+                    if(p->top == CIRCLE_OUTLET) {
+                        if(dx*dx + dy*dy < r) {
+                            textureBuffer->writePixel(x_pos, y_pos, argb);
+                            continue;
+                        }
+                    }
+                    else if(p->top == SQUARE_OUTLET) {
+                        if(abs(dx) < r2  && abs(dy) < r2) {
+                            textureBuffer->writePixel(x_pos, y_pos, argb);
+                            continue;
+                        }
                     }
                 }
 
                 //parts not to draw
-                if(p->right == ONE_INLET) {
+                if(p->right == CIRCLE_INLET || p->right == SQUARE_INLET) {
                     double dx = xp-0.5;
                     double dy = yp;
-                    if(dx*dx + dy*dy < r) continue;
+                    if(p->right == CIRCLE_INLET) if(dx*dx + dy*dy < r) continue;
+                    if(p->right == SQUARE_INLET) if(abs(dx) < r2  && abs(dy) < r2) continue;
                 }
-                if(p->left == ONE_INLET) {
+                if(p->left == CIRCLE_INLET || p->left == SQUARE_INLET) {
                     double dx = xp+0.5;
                     double dy = yp;
-                    if(dx*dx + dy*dy < r) continue;
+                    if(p->left == CIRCLE_INLET) if(dx*dx + dy*dy < r) continue;
+                    if(p->left == SQUARE_INLET) if(abs(dx) < r2  && abs(dy) < r2) continue;
                 }
-                if(p->bottom == ONE_INLET) {
+                if(p->bottom == CIRCLE_INLET || p->bottom == SQUARE_INLET) {
                     double dx = xp;
                     double dy = yp - 0.5;
-                    if(dx*dx + dy*dy < r) continue;
+                    if(p->bottom == CIRCLE_INLET) if(dx*dx + dy*dy < r) continue;
+                    if(p->bottom == SQUARE_INLET) if(abs(dx) < r2  && abs(dy) < r2) continue;
                 }
-                if(p->top == ONE_INLET) {
+                if(p->top == CIRCLE_INLET || p->top == SQUARE_INLET) {
                     double dx = xp;
                     double dy = yp + 0.5;
-                    if(dx*dx + dy*dy < r) continue;
+                    if(p->top == CIRCLE_INLET) if(dx*dx + dy*dy < r) continue;
+                    if(p->top == SQUARE_INLET) if(abs(dx) < r2  && abs(dy) < r2) continue;
                 }
 
                 //exclude extra

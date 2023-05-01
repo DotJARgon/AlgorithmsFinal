@@ -6,14 +6,22 @@
 #include <random>
 
 void randomEdge(Edge& e1, Edge& e2) {
-    int r = rand()%3;
+    int r = rand()%5;
     if(r == 0) {
-        e1 = ONE_OUTLET;
-        e2 = ONE_INLET;
+        e1 = CIRCLE_OUTLET;
+        e2 = CIRCLE_INLET;
     }
     else if(r == 1) {
-        e1 = ONE_INLET;
-        e2 = ONE_OUTLET;
+        e1 = CIRCLE_INLET;
+        e2 = CIRCLE_OUTLET;
+    }
+    else if(r == 2) {
+        e1 = SQUARE_INLET;
+        e2 = SQUARE_OUTLET;
+    }
+    else if(r == 3) {
+        e1 = SQUARE_OUTLET;
+        e2 = SQUARE_INLET;
     }
     else {
         e1 = e2 = FLAT;
@@ -38,14 +46,14 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* 
     for(int i = 0; i < num_cols; i++) {
         vector<Piece*> row;
         for(int j = 0; j < num_rows; j++) {
-            Piece* piece = new Piece(FLAT, ONE_OUTLET, FLAT, ONE_INLET);
+            Piece* piece = new Piece(FLAT, CIRCLE_OUTLET, FLAT, CIRCLE_INLET);
             piece->absx = j;
             piece->absy = i;
             piece->gridx = j + num_rows;
             piece->gridy = i;
 
-            piece->x = 0.5*double(j + num_rows) / num_rows;
-            piece->y = double(i) / num_cols;
+            piece->x = 0.5*double(j + num_rows) / num_rows + 0.25 / num_rows;
+            piece->y = double(i) / num_cols + 0.5 / num_cols;
 
             piece->ux = double(j) / num_rows;
             piece->uy = double(i) / num_cols;
@@ -54,6 +62,7 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* 
             piece->rotation = 0;
             piece->rows = num_rows;
             piece->cols = num_cols;
+            //piece->isSelected = true;
             this->board.push_back(piece);
             row.push_back(piece);
         }
@@ -65,10 +74,16 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* 
         for(int j = 0; j < num_rows; j++) {
             Piece* p = tempGrid.at(i).at(j);
 
-            if(j == 0) p->left = FLAT;
-            else if(j == num_rows-1) p->right = FLAT;
-            if(i == 0) p->top = FLAT;
-            else if(i == num_cols-1) p->bottom = FLAT;
+            Edge e1, e2;
+            randomEdge(e1, e2);
+
+            p->right = e1;
+            tempGrid.at(i).at((j + 1)%num_rows)->left = e2;
+
+            randomEdge(e1, e2);
+
+            p->bottom = e1;
+            tempGrid.at((i + 1)%num_cols).at(j)->top = e2;
         }
     }
 

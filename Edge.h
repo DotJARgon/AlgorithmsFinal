@@ -14,7 +14,7 @@
 
 
 enum Edge {
-    FLAT, ONE_INLET, ONE_OUTLET // Type of edge for puzzle pieces
+    FLAT, CIRCLE_INLET, CIRCLE_OUTLET, SQUARE_INLET, SQUARE_OUTLET // Type of edge for puzzle pieces
 };
 
 #endif //FINALPROJECT_EDGE_H

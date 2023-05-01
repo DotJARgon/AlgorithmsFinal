@@ -7,8 +7,10 @@
 //actually likely not necessary but here in case
 bool matches(Edge e1, Edge e2) {
     if(e1 == FLAT) return e2 == FLAT;
-    if(e1 == ONE_INLET) return e2 == ONE_OUTLET;
-    if(e1 == ONE_OUTLET) return e2 == ONE_INLET;
+    if(e1 == CIRCLE_INLET) return e2 == CIRCLE_OUTLET;
+    if(e1 == CIRCLE_OUTLET) return e2 == CIRCLE_INLET;
+    if(e1 == SQUARE_INLET) return e2 == SQUARE_OUTLET;
+    if(e1 == SQUARE_OUTLET) return e2 == SQUARE_INLET;
     return false;
 }
 
@@ -61,8 +63,6 @@ void Piece::rotate(Rotate rotation) {
     if(rotation == LEFT_ROT) this->rotation = (this->rotation + 3) % 4;
     else if(rotation == RIGHT_ROT) this->rotation = (this->rotation + 1) % 4;
 
-    double cos_rot = cos(this->rotation*3.1415926535 / 2.0);
-    double sin_rot = sin(this->rotation*3.1415926535 / 2.0);
     if(rotation == LEFT_ROT) this->rotateEdgesLeft();
     else if(rotation == RIGHT_ROT) this->rotateEdgesRight();
 }
@@ -82,8 +82,8 @@ bool Piece::canInterlock(Piece* piece) {
     if(abs(dx) == 1 || abs(dy) == 1) {
         if(dx == 1 && dy == 0)  return matches(this->right, piece->left); //piece is right
         if(dx == -1 && dy == 0) return matches(this->left, piece->right); //piece is left
-        if(dy == 1 && dx == 0)  return matches(this->top, piece->bottom); //piece is above
-        if(dy == -1 && dx == 0) return matches(this->bottom, piece->top); //piece is below
+        if(dy == 1 && dx == 0)  return matches(this->bottom, piece->top); //piece is above
+        if(dy == -1 && dx == 0) return matches(this->top, piece->bottom); //piece is below
     }
     return false;
 }
@@ -143,7 +143,7 @@ void Piece::drawSelf(PieceTexture* texture, PlotterTexture* screen) {
     double scaleY = double(screen->HEIGHT) / (this->cols*texture->HEIGHT);
     if(this->isSelected) {
 
-        double xT = 0.5*double(gridx) / this->rows + 0.5 / this->rows;
+        double xT = 0.5*double(gridx) / this->rows + 0.25 / this->rows;
         double yT = double(gridy) / this->cols + 0.5 / this->cols;
 
         double r = this->rotation*3.1415926535 / 2.0;
@@ -152,7 +152,7 @@ void Piece::drawSelf(PieceTexture* texture, PlotterTexture* screen) {
         texture->plot(this, screen, this->x*screen->WIDTH, this->y*screen->HEIGHT, scaleX, scaleY, ux, uy, ux + width, uy + height, r, false);
     }
     else {
-        double xT = 0.5*double(gridx) / this->rows + 0.5 / this->rows;
+        double xT = 0.5*double(gridx) / this->rows + 0.25 / this->rows;
         double yT = double(gridy) / this->cols + 0.5 / this->cols;
 
         double r = this->rotation*3.1415926535 / 2.0;
