@@ -90,6 +90,13 @@ public:
      * postcondition: plays the victory audio
      */
     void playVictory();
+
+    /*
+     * description: plays music
+     * return: none
+     * precondition: none
+     * postcondition: music is played
+     */
     void playMusic();
 
 };
