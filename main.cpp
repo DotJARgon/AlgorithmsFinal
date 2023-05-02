@@ -13,7 +13,7 @@ int main(int argc, char ** argv)
 {
     //Texture* texture = TextureLoader::test<Texture>(20, 30);
 
-    vector<string> fileName = {"lion.txt", "hogsmeade.txt"};
+    vector<string> fileName = {"lion.txt", "hogsmeade.txt", "baylorRockWall.txt"};
     int userInputDif, userInputPic;
     //TODO Just doing this console input until we get the texture class working for SDL if we do
     cout << "What difficulty?\n1.) Easy - 2x2\n2.) Medium - 4x4\n3.) Hard - 8x8\n";
