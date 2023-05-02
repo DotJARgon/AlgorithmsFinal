@@ -8,6 +8,8 @@ void PieceTexture::plot(Piece* p, TextureBuffer* textureBuffer, int x, int y, do
 
     double r = 0.01;
     double r2 = sqrt(r);
+    
+    double correction = 1.2;
 
     double cos_rot = cos(rot);
     double sin_rot = sin(rot);
@@ -41,13 +43,13 @@ void PieceTexture::plot(Piece* p, TextureBuffer* textureBuffer, int x, int y, do
                     double dx = xp-0.5;
                     double dy = yp;
                     if(p->right == CIRCLE_OUTLET) {
-                        if(dx*dx + dy*dy < r) {
+                        if(dx*dx + dy*dy < r*correction) {
                             textureBuffer->writePixel(x_pos, y_pos, argb);
                             continue;
                         }
                     }
                     else if(p->right == SQUARE_OUTLET) {
-                        if(abs(dx) < r2  && abs(dy) < r2) {
+                        if(abs(dx) < r2*correction  && abs(dy) < r2*correction) {
                             textureBuffer->writePixel(x_pos, y_pos, argb);
                             continue;
                         }
@@ -57,13 +59,13 @@ void PieceTexture::plot(Piece* p, TextureBuffer* textureBuffer, int x, int y, do
                     double dx = xp+0.5;
                     double dy = yp;
                     if(p->left == CIRCLE_OUTLET) {
-                        if(dx*dx + dy*dy < r) {
+                        if(dx*dx + dy*dy < r*correction) {
                             textureBuffer->writePixel(x_pos, y_pos, argb);
                             continue;
                         }
                     }
                     else if(p->left == SQUARE_OUTLET) {
-                        if(abs(dx) < r2  && abs(dy) < r2) {
+                        if(abs(dx) < r2*correction  && abs(dy) < r2*correction) {
                             textureBuffer->writePixel(x_pos, y_pos, argb);
                             continue;
                         }
@@ -73,13 +75,13 @@ void PieceTexture::plot(Piece* p, TextureBuffer* textureBuffer, int x, int y, do
                     double dx = xp;
                     double dy = yp - 0.5;
                     if(p->bottom == CIRCLE_OUTLET) {
-                        if(dx*dx + dy*dy < r) {
+                        if(dx*dx + dy*dy < r*correction) {
                             textureBuffer->writePixel(x_pos, y_pos, argb);
                             continue;
                         }
                     }
                     else if(p->bottom == SQUARE_OUTLET) {
-                        if(abs(dx) < r2  && abs(dy) < r2) {
+                        if(abs(dx) < r2*correction  && abs(dy) < r2*correction) {
                             textureBuffer->writePixel(x_pos, y_pos, argb);
                             continue;
                         }
@@ -89,13 +91,13 @@ void PieceTexture::plot(Piece* p, TextureBuffer* textureBuffer, int x, int y, do
                     double dx = xp;
                     double dy = yp + 0.5;
                     if(p->top == CIRCLE_OUTLET) {
-                        if(dx*dx + dy*dy < r) {
+                        if(dx*dx + dy*dy < r*correction) {
                             textureBuffer->writePixel(x_pos, y_pos, argb);
                             continue;
                         }
                     }
                     else if(p->top == SQUARE_OUTLET) {
-                        if(abs(dx) < r2  && abs(dy) < r2) {
+                        if(abs(dx) < r2*correction  && abs(dy) < r2*correction) {
                             textureBuffer->writePixel(x_pos, y_pos, argb);
                             continue;
                         }
