@@ -49,11 +49,11 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* 
             Piece* piece = new Piece(FLAT, CIRCLE_OUTLET, FLAT, CIRCLE_INLET);
             piece->absx = j;
             piece->absy = i;
-            piece->gridx = j + num_rows;
-            piece->gridy = i;
+            piece->gridx = (rand()%num_rows) + num_rows;
+            piece->gridy = (rand()%num_cols);
 
-            piece->x = 0.5*double(j + num_rows) / num_rows + 0.25 / num_rows;
-            piece->y = double(i) / num_cols + 0.5 / num_cols;
+            piece->x = 0.5*double(piece->gridx) / num_rows + 0.25 / num_rows;
+            piece->y = double(piece->gridy) / num_cols + 0.5 / num_cols;
 
             piece->ux = double(j) / num_rows;
             piece->uy = double(i) / num_cols;
