@@ -17,7 +17,8 @@ int main(int argc, char ** argv)
                                "baylorRockWall.txt",
                                "windows7.txt", "starryNight.txt",
                                "Texas.txt", "TATE.txt",
-                               "room.txt", "easterIsland.txt"};
+                               "room.txt", "easterIsland.txt",
+                               "musicians.txt"};
     int userInputDif, userInputPic;
     //TODO Just doing this console input until we get the texture
     // class working for SDL if we do
