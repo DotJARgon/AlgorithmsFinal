@@ -1,6 +1,12 @@
-//
-// Created by Marcelo on 1/19/2023.
-//
+/*
+* Author: Team Team (Tristan Brown, Marcelo Carpenter, Thomas Cho,
+*          Joshua Linnett, Aaron Mendoza, Harrison Williams)
+* Assignment Title: Jigsaw Puzzle Group Project
+* Assignment Description: This is input handler for input events using SDL library
+* Due Date: 5/4/2023
+* Date Created: 4/27/2023
+* Date Last Modified: 5/4/2023
+ */
 #include <string>
 #include <fstream>
 #include "TextureBuffer.h"

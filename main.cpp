@@ -1,6 +1,15 @@
+/*
+* Author: Team Team (Tristan Brown, Marcelo Carpenter, Thomas Cho,
+*          Joshua Linnett, Aaron Mendoza, Harrison Williams)
+* Assignment Title: Jigsaw Puzzle Group Project
+* Assignment Description: This is main.cpp file for Jigsaw puzzle group project
+* Due Date: 5/4/2023
+* Date Created: 4/27/2023
+* Date Last Modified: 5/4/2023
+ */
 #include <iostream>
 #include <chrono>
-#include <unistd.h>
+#include <unistd.h> // used for sleep function
 #include "SDL_Plotter.h"
 #include "TextureLoader.h"
 #include "PieceTexture.h"
@@ -15,20 +24,18 @@ int main(int argc, char ** argv)
 
 
     bool enterHit = false;
-    bool difficultySelect = false;
-    bool displayStart = true;
 
 
     int a[37][10][7] = {{{0}}};
 
     initText(a);
 
-    SDL_Plotter* g = new SDL_Plotter(500,1000);
+    // Create SDL_Plotter object and SoundHandler object
+    SDL_Plotter *g = new SDL_Plotter(500, 1000);
+    SoundHandler *soundHandler = new SoundHandler(g);
 
-    SoundHandler* soundHandler = new SoundHandler(g);
-
+    // Create PlotterTexture object using SDL_Plotter object
     PlotterTexture plotter(g);
-    //Texture* texture = TextureLoader::test<Texture>(20, 30);
 
     vector<string> fileNames = {"lion.txt", "hogsmeade.txt",
                                "baylorRockWall.txt",
@@ -95,7 +102,10 @@ int main(int argc, char ** argv)
 
     char press;
 
+    //delay to prevent clicking too quick
     sleep(1);
+
+    //polling for input until proper keys are clicked
     while(!g->getQuit()){
         if(g->kbhit()){
             press = g->getKey();
@@ -124,6 +134,8 @@ int main(int argc, char ** argv)
         }
     }
 
+
+    //draws all of the text to the screen for the menu
     displayText("SELECT_IMAGE",
                 32, 500 - 28*6, 50, 4, 255,255,255, *g, a);
 
@@ -181,8 +193,10 @@ int main(int argc, char ** argv)
 
     g->update();
 
+    //delay to prevent fast click
     sleep(1);
 
+    //grab user input, encoding the keys
     while(!g->getQuit()){
         if(g->kbhit()){
             press = g->getKey();
@@ -232,7 +246,8 @@ int main(int argc, char ** argv)
         g->update();
     }
 
-    switch (userInputDif){
+    // Convert user input to appropriate dimensions
+    switch (userInputDif) {
         case 1:
             userInputDif = 2;
             break;
@@ -247,31 +262,44 @@ int main(int argc, char ** argv)
             return 0;
     }
 
-    PieceTexture* puzzle = TextureLoader::loadImage<PieceTexture>
-            (fileNames.at(userInputPic));
+    // Load the selected image using TextureLoader and save as PieceTexture object
+    PieceTexture *puzzle = TextureLoader::loadImage<PieceTexture>
+        (fileNames.at(userInputPic));
 
-
+    // Create Board object using user-defined difficulty, plotter, puzzle, and soundHandler objects
     Board board(userInputDif, userInputDif,
                 &plotter, puzzle, soundHandler);
 
+    // Start the timer for playing background music
     long long start = std::chrono::system_clock::
-            now().time_since_epoch().count();
+    now().time_since_epoch().count();
     bool started = false;
 
-    while (!g->getQuit() && !board.checkWin()){
+
+    // While the user has not quit the game and the puzzle has not been solved
+    while (!g->getQuit() && !board.checkWin()) {
+        // Start playing background music after a set time has elapsed
+
+        // Get the current system time in nanoseconds
         long long t1 = std::chrono::system_clock::
-                now().time_since_epoch().count();
-        if(t1 - start > 500000000 && !started) {
+        now().time_since_epoch().count();
+        // If 500 milliseconds have passed and the music has not started playing yet
+        if (t1 - start > 500000000 && !started) {
             started = true;
-            soundHandler->playMusic();
+            soundHandler->playMusic();// Start playing background music
         }
-        plotter.clear(0);
-        board.step();
-        board.draw();
+        plotter.clear(0);   // Clear the plotter buffer
+        board.step();   // Advance the game state by one step.
+        board.draw();   // Draw the game board.
         long long t2 = std::chrono::system_clock::now().time_since_epoch().count();
+
+        // Update the SDL window with the new drawing.
         g->update();
-    }
+    }// End of outer while loop
+
+    // Pause the game for 6 seconds before terminating.
     sleep(6);
 
     return 0;
 }
+

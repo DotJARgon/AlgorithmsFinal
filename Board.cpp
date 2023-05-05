@@ -1,10 +1,25 @@
-//
-// Created by Marcelo on 4/23/2023.
-//
+/*
+* Author: Team Team (Tristan Brown, Marcelo Carpenter, Thomas Cho,
+*          Joshua Linnett, Aaron Mendoza, Harrison Williams)
+* Assignment Title: Jigsaw Puzzle Group Project
+* Assignment Description: This is board class implementation file
+* Due Date: 5/4/2023
+* Date Created: 4/27/2023
+* Date Last Modified: 5/4/2023
+ */
+
 
 #include "Board.h"
+#include "TextureLoader.h"
 #include <random>
 
+/*
+     * description: updates the edges with deterministic random aspects
+     *              (inlets, outlets, shapes, rotation, etc.)
+     * return: void
+     * precondition: input edges are not null
+     * postcondition: input edges are randomly updated with puzzle aspects
+     */
 void randomEdge(Edge& e1, Edge& e2) {
     int r = rand()%5;
     if(r == 0) {
@@ -27,17 +42,24 @@ void randomEdge(Edge& e1, Edge& e2) {
         e1 = e2 = FLAT;
     }
 }
-
+/*
+     * description: This is Board constructor; This will generate fundamental layer of
+     *              puzzle game in provided dimensions, plotter, texture, and sounds
+     * return: void
+     * precondition: dimension values are positive, plotter and texture and soundHandler pointers
+     *               are valid
+     * postcondition: Board layer is generated
+     */
 Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* texture, SoundHandler* soundHandler) {
     this->num_rows = num_rows;
     this->num_cols = num_cols;
     this->plotter = plotter;
     this->texture = texture;
     this->soundHandler = soundHandler;
-
     this->mousex = 0;
     this->mousey = 0;
     this->clicked = false;
+    this->winState = false;
 
     this->selected = nullptr;
 
@@ -106,20 +128,41 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* 
     }
 
 }
-Board::~Board() {}
 
-bool Board::checkWin() {
-    //cannot win if a piece is being held
-    if(this->selected) return false;
-    for(Piece* p : this->board) {
-        if(p->gridx != p->absx || p->gridy != p->absy) {
-            return false;
-        }
+/*
+     * description: Board Destructor
+     * return: void
+     * precondition: this board object has been properly initialized
+     * postcondition: it has cleaned up the memory it has created
+     */
+Board::~Board() {
+    //delete all pieces, only thing unique to this object
+    for(Piece* piece : this->board) {
+        delete piece;
     }
-    this->soundHandler->playVictory();
-    return true;
 }
 
+bool Board::getWinState() {
+    return this->winState;
+}
+
+
+/*
+     * description: validates winning scenario.
+     * return: bool
+     * precondition: program is running && no edges are held
+     * postcondition: ends the gaming process and display/play winning effects
+     */
+bool Board::checkWin() {
+    return this->winState;
+}
+
+/*
+     * description: ActionHandler for mouse inputs
+     * return: void
+     * precondition: mouse is clicked
+     * postcondition: corresponding action is performed
+     */
 void Board::step() {
     this->plotter->getPlotter()->getMouseLocation(mousex, mousey);
     clicked = this->plotter->getPlotter()->mouseClick();
@@ -150,19 +193,22 @@ void Board::step() {
         bool allNeighbors = true;
         int neighborCount = 0;
         for(Piece* p : this->board) {
-            if(p != this->selected) {
-                if(p->gridx == this->selected->gridx && p->gridy == this->selected->gridy) {
-                    collision = true;
-                    break;
-                }
-                if(p->isAdjacent(this->selected)) {
-                    neighborCount++;
-                    if(!p->canInterlock(this->selected)) {
+            //does not check right side of board
+            if(p->gridx < this->num_rows) {
+                if(p != this->selected) {
+                    if(p->gridx == this->selected->gridx && p->gridy == this->selected->gridy) {
                         collision = true;
                         break;
                     }
-                    if(!this->selected->areNeighbors(p)) {
-                        allNeighbors = false;
+                    if(p->isAdjacent(this->selected)) {
+                        neighborCount++;
+                        if(!p->canInterlock(this->selected)) {
+                            collision = true;
+                            break;
+                        }
+                        if(!this->selected->areNeighbors(p)) {
+                            allNeighbors = false;
+                        }
                     }
                 }
             }
@@ -171,10 +217,17 @@ void Board::step() {
             this->selected->isSelected = false;
             this->selected = nullptr;
 
+            this->winState = checkWin();
+
             this->soundHandler->playDrop();
 
             if(allNeighbors && neighborCount > 0) {
                 this->soundHandler->playRight();
+            }
+
+            //we have won! play victory!
+            if(this->winState) {
+                this->soundHandler->playVictory();
             }
         }
         else {
@@ -187,13 +240,32 @@ void Board::step() {
     }
     clicked = false;
 }
+
+/*
+     * description: Populates board layer with plots and texture
+     * return: void
+     * precondition: board is valid
+     * postcondition: board is populated with texture and plotter
+     */
 void Board::draw() {
+    //this->background->plot(plotter, 0, 0, 0.5, 1.0);
+    for(int i = 0; i < plotter->HEIGHT; i++) {
+        for(int j = -1; j < 2; j++) {
+            this->plotter->writePixel(plotter->WIDTH / 2 + j, i, 0);
+        }
+
+    }
     for(Piece* p : this->board) {
         if(p != this->selected) p->drawSelf(texture, plotter);
     }
     if(this->selected != nullptr) this->selected->drawSelf(texture, plotter);
 }
-
+/*
+     * description: ActionHandler for mouse input that handles picking up piece
+     * return: void
+     * precondition: mouse input is valid
+     * postcondition: corresponding action is performed
+     */
 void Board::grab(int mousex, int mousey) {
     double screenx = double(mousex) / plotter->WIDTH;
     double screeny = double(mousey) / plotter->HEIGHT;
