@@ -65,7 +65,7 @@ int main(int argc, char ** argv)
             now().time_since_epoch().count();
     bool started = false;
 
-    while (!g->getQuit() && !board.checkWin()){
+    while (!g->getQuit() && !board.getWinState()){
         long long t1 = std::chrono::system_clock::
                 now().time_since_epoch().count();
         if(t1 - start > 500000000 && !started) {

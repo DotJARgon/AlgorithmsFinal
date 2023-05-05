@@ -24,12 +24,14 @@ private:
     int mousex;
     int mousey;
     bool clicked;
+    bool winState;
 public:
     Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* texture, SoundHandler* soundHandler);
     void grab(int mousex, int mousey);
     void step();
     void draw();
     bool checkWin();
+    bool getWinState();
     ~Board();
 };
 

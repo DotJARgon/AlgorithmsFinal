@@ -38,6 +38,7 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* 
     this->mousex = 0;
     this->mousey = 0;
     this->clicked = false;
+    this->winState = false;
 
     this->selected = nullptr;
 
@@ -108,6 +109,10 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* 
 }
 Board::~Board() {}
 
+bool Board::getWinState() {
+    return this->winState;
+}
+
 bool Board::checkWin() {
     //cannot win if a piece is being held
     if(this->selected) return false;
@@ -150,19 +155,22 @@ void Board::step() {
         bool allNeighbors = true;
         int neighborCount = 0;
         for(Piece* p : this->board) {
-            if(p != this->selected) {
-                if(p->gridx == this->selected->gridx && p->gridy == this->selected->gridy) {
-                    collision = true;
-                    break;
-                }
-                if(p->isAdjacent(this->selected)) {
-                    neighborCount++;
-                    if(!p->canInterlock(this->selected)) {
+            //does not check right side of board
+            if(p->gridx < this->num_rows) {
+                if(p != this->selected) {
+                    if(p->gridx == this->selected->gridx && p->gridy == this->selected->gridy) {
                         collision = true;
                         break;
                     }
-                    if(!this->selected->areNeighbors(p)) {
-                        allNeighbors = false;
+                    if(p->isAdjacent(this->selected)) {
+                        neighborCount++;
+                        if(!p->canInterlock(this->selected)) {
+                            collision = true;
+                            break;
+                        }
+                        if(!this->selected->areNeighbors(p)) {
+                            allNeighbors = false;
+                        }
                     }
                 }
             }
@@ -170,6 +178,8 @@ void Board::step() {
         if(!collision) {
             this->selected->isSelected = false;
             this->selected = nullptr;
+
+            this->winState = checkWin();
 
             this->soundHandler->playDrop();
 
