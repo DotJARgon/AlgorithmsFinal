@@ -16,6 +16,7 @@ private:
     PlotterTexture* plotter;
     PieceTexture* texture;
     SoundHandler* soundHandler;
+    Texture* background;
     int num_rows, num_cols;
     //double array of pieces, note, must cleanup eventually
     //x by y will be the coordinates

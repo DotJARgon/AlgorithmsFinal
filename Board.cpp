@@ -3,6 +3,7 @@
 //
 
 #include "Board.h"
+#include "TextureLoader.h"
 #include <random>
 
 void randomEdge(Edge& e1, Edge& e2) {
@@ -34,6 +35,8 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* 
     this->plotter = plotter;
     this->texture = texture;
     this->soundHandler = soundHandler;
+
+    this->background = TextureLoader::loadImage<Texture>("puzzle_place.txt");
 
     this->mousex = 0;
     this->mousey = 0;
@@ -107,7 +110,12 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* 
     }
 
 }
-Board::~Board() {}
+Board::~Board() {
+    //delete all pieces, only thing unique to this object
+    for(Piece* piece : this->board) {
+        delete piece;
+    }
+}
 
 bool Board::getWinState() {
     return this->winState;
@@ -198,6 +206,13 @@ void Board::step() {
     clicked = false;
 }
 void Board::draw() {
+    //this->background->plot(plotter, 0, 0, 0.5, 1.0);
+    for(int i = 0; i < plotter->HEIGHT; i++) {
+        for(int j = -1; j < 2; j++) {
+            this->plotter->writePixel(plotter->WIDTH / 2 + j, i, 0);
+        }
+
+    }
     for(Piece* p : this->board) {
         if(p != this->selected) p->drawSelf(texture, plotter);
     }

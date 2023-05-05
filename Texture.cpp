@@ -39,7 +39,7 @@ void Texture::plot(TextureBuffer* textureBuffer, double x, double y, double w, d
             double ty = ((j - sy) / sh) * this->HEIGHT;
             //get the pixel and plot in new space
             int argb = this->getPixel(tx, ty);
-            textureBuffer->writePixel(i, j, argb);
+            if(argb != 0xffffff) textureBuffer->writePixel(i, j, argb);
         }
     }
 }
