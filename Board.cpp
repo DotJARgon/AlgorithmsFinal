@@ -21,6 +21,7 @@
      * postcondition: input edges are randomly updated with puzzle aspects
      */
 void randomEdge(Edge& e1, Edge& e2) {
+    //random number!
     int r = rand()%5;
     if(r == 0) {
         e1 = CIRCLE_OUTLET;
@@ -50,7 +51,8 @@ void randomEdge(Edge& e1, Edge& e2) {
      *               are valid
      * postcondition: Board layer is generated
      */
-Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* texture, SoundHandler* soundHandler) {
+Board::Board(int num_rows, int num_cols, PlotterTexture* plotter,
+             PieceTexture* texture, SoundHandler* soundHandler) {
     this->num_rows = num_rows;
     this->num_cols = num_cols;
     this->plotter = plotter;
@@ -71,6 +73,8 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* 
             Piece* piece = new Piece(FLAT, CIRCLE_OUTLET, FLAT, CIRCLE_INLET);
             piece->absx = j;
             piece->absy = i;
+
+            //randomize their placement1
             piece->gridx = (rand()%num_rows) + num_rows;
             piece->gridy = (rand()%num_cols);
 
@@ -84,7 +88,6 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* 
             piece->rotation = 0;
             piece->rows = num_rows;
             piece->cols = num_cols;
-            //piece->isSelected = true;
             this->board.push_back(piece);
             row.push_back(piece);
         }
@@ -92,6 +95,7 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* 
         tempGrid.push_back(row);
     }
 
+    //this makes their edges randomly!
     for(int i = 0; i < num_cols; i++) {
         for(int j = 0; j < num_rows; j++) {
             Piece* p = tempGrid.at(i).at(j);
@@ -109,6 +113,7 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* 
         }
     }
 
+    //flatten any edges at the edge of the final board
     for(int i = 0; i < num_cols; i++) {
         for(int j = 0; j < num_rows; j++) {
             Piece* p = tempGrid.at(i).at(j);
@@ -120,6 +125,7 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* 
         }
     }
 
+    //randomly rotate for good measure
     for(Piece* p : this->board) {
         int rand = std::rand()%4;
         for(int i = 0; i < rand; i++) {
@@ -150,7 +156,7 @@ bool Board::getWinState() {
 /*
      * description: validates winning scenario.
      * return: bool
-     * precondition: program is running && no edges are held
+     * precondition: program is running && no pieces are held
      * postcondition: ends the gaming process and display/play winning effects
      */
 bool Board::checkWin() {
@@ -165,8 +171,7 @@ bool Board::checkWin() {
      */
 void Board::step() {
     this->plotter->getPlotter()->getMouseLocation(mousex, mousey);
-    clicked = this->plotter->getPlotter()->mouseClick();
-    if(clicked) this->plotter->getPlotter()->getMouseClick();
+    this->clicked = this->plotter->getPlotter()->mouseClick();
     double screenx = double(mousex) / plotter->WIDTH;
     double screeny = double(mousey) / plotter->HEIGHT;
     //as long as it is not null
@@ -174,6 +179,7 @@ void Board::step() {
         this->selected->x = screenx;
         this->selected->y = screeny;
 
+        //rotate the selected piece
         char key = this->plotter->getPlotter()->getKey();
         if(key == RIGHT_ARROW) {
             this->selected->rotate(RIGHT_ROT);
@@ -183,20 +189,28 @@ void Board::step() {
         }
     }
 
+    //if their is no selected piece and there is a click
+    //then pick up a new piece, the closest one
+    //via manhattan distance
     if(clicked && this->selected == nullptr) {
         grab(mousex, mousey);
         this->soundHandler->playGrab();
     }
     else if(clicked) {
+        //calculate the selected piece'
+        //grid
         this->selected->setGrid();
         bool collision = false;
         bool allNeighbors = true;
         int neighborCount = 0;
+
+        //check for any collisions
         for(Piece* p : this->board) {
             //does not check right side of board
             if(p->gridx < this->num_rows) {
                 if(p != this->selected) {
-                    if(p->gridx == this->selected->gridx && p->gridy == this->selected->gridy) {
+                    if(p->gridx == this->selected->gridx
+                    && p->gridy == this->selected->gridy) {
                         collision = true;
                         break;
                     }
@@ -213,6 +227,8 @@ void Board::step() {
                 }
             }
         }
+        //if there are no collisions, check for
+        //the win state, and plop the piece down
         if(!collision) {
             this->selected->isSelected = false;
             this->selected = nullptr;
@@ -231,13 +247,17 @@ void Board::step() {
             }
         }
         else {
+            //failure sound
             this->soundHandler->playFail();
         }
     }
 
+    //set the grid once more just in case
     if(this->selected) {
         this->selected->setGrid();
     }
+    //set click state to false to allow
+    //another click
     clicked = false;
 }
 
@@ -248,16 +268,18 @@ void Board::step() {
      * postcondition: board is populated with texture and plotter
      */
 void Board::draw() {
-    //this->background->plot(plotter, 0, 0, 0.5, 1.0);
+    //draw a line in the middle to divide
     for(int i = 0; i < plotter->HEIGHT; i++) {
         for(int j = -1; j < 2; j++) {
             this->plotter->writePixel(plotter->WIDTH / 2 + j, i, 0);
         }
 
     }
+    //draw each piece!
     for(Piece* p : this->board) {
         if(p != this->selected) p->drawSelf(texture, plotter);
     }
+    //draw the selected piece last (it needs to be above)
     if(this->selected != nullptr) this->selected->drawSelf(texture, plotter);
 }
 /*
@@ -278,6 +300,8 @@ void Board::grab(int mousex, int mousey) {
         p->isSelected = false;
         double dx = p->x - screenx;
         double dy = p->y - screeny;
+
+        //manhattan distance
         double d = abs(dx) + abs(dy);
         if(d < dist) {
             dist = d;
@@ -285,5 +309,6 @@ void Board::grab(int mousex, int mousey) {
         }
     }
 
+    //there will always be a closest piece
     this->selected->isSelected = true;
 }

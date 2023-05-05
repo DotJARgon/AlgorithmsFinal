@@ -65,7 +65,7 @@ public:
     /*
      * description: validates winning scenario.
      * return: bool
-     * precondition: program is running && no edges are held
+     * precondition: program is running && no pieces are held
      * postcondition: ends the gaming process and display/play winning effects
      */
     bool checkWin();
