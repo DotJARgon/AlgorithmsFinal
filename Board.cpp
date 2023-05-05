@@ -171,7 +171,8 @@ bool Board::checkWin() {
      */
 void Board::step() {
     this->plotter->getPlotter()->getMouseLocation(mousex, mousey);
-    this->clicked = this->plotter->getPlotter()->mouseClick();
+    clicked = this->plotter->getPlotter()->mouseClick();
+    if(clicked) this->plotter->getPlotter()->getMouseClick();
     double screenx = double(mousex) / plotter->WIDTH;
     double screeny = double(mousey) / plotter->HEIGHT;
     //as long as it is not null
