@@ -34,11 +34,11 @@ SoundHandler::SoundHandler(SDL_Plotter* plotter) {
     this->sounds.emplace(SPECIAL_DROP, "SpecialDrop.wav");
     this->sounds.emplace(SPECIAL_GRAB, "SpecialGrab.wav");
 
-    //TODO might redo this sound to make it more emphazised
     this->sounds.emplace(YEA_BABY, "Yea-Baby.wav");
     this->special = false;
 
 
+    //initialize all of the sound mappings!
     for(const auto& sound_pair : this->sounds) {
         this->plotter->initSound(sound_pair.second);
     }
@@ -52,6 +52,7 @@ void SoundHandler::playSound(Sounds sound) {
 }
 
 void SoundHandler::playClick() {
+    //randomized click sounds!
     srand(time(nullptr));
     int i = (rand() % 2) + 1;
 
@@ -62,12 +63,11 @@ void SoundHandler::playClick() {
         case 2:
             this->plotter->playSound(this->sounds.at(CLICK2));
             break;
-        default:
-            cout << "if this prints we failed the project" << endl;
     }
 
 }
 void SoundHandler::playDrop() {
+    //randomized drop sounds!
     srand(time(nullptr));
     int i = (rand() % 3) + 1;
 
@@ -88,13 +88,12 @@ void SoundHandler::playDrop() {
             case 3:
                 this->plotter->playSound(this->sounds.at(DROP3));
                 break;
-            default:
-                cout << "if this prints we failed the project" << endl;
         }
     }
 
 }
 void SoundHandler::playFail() {
+    //randomized failure :(
     srand(time(nullptr));
     int i = (rand() % 4) + 1;
 
@@ -111,13 +110,12 @@ void SoundHandler::playFail() {
         case 4:
             this->plotter->playSound(this->sounds.at(FAILED4));
             break;
-        default:
-            cout << "if this prints we failed the project" << endl;
     }
 
 
 }
 void SoundHandler::playGrab() {
+    //randomized grabbing sounds!
     srand(time(nullptr));
     int i = (rand() % 4) + 1;
 
@@ -135,11 +133,10 @@ void SoundHandler::playGrab() {
             this->plotter->playSound(this->sounds.at(SPECIAL_GRAB));
             this->special = true;
             break;
-        default:
-            cout << "if this prints we failed the project" << endl;
     }
 }
 void SoundHandler::playRight() {
+    //ranzomized correct sounds!
     srand(time(nullptr));
     int i = (rand() % 4) + 1;
 
@@ -156,16 +153,16 @@ void SoundHandler::playRight() {
         case 4:
             this->plotter->playSound(this->sounds.at(RIGHT4));
             break;
-        default:
-            cout << "if this prints we failed the project" << endl;
     }
 }
 void SoundHandler::playVictory() {
+    //this cuts off the main music and plays the win condition sound
     this->plotter->quitSound(this->sounds.at(GRAZE_ON_THE_ROOF));
     this->plotter->playSound(this->sounds.at(YEA_BABY));
 }
 
-//TODO ill add in the music randomization later
+
 void SoundHandler::playMusic() {
+    //plays the main sound track!
     this->plotter->playSound(this->sounds.at(GRAZE_ON_THE_ROOF));
 }

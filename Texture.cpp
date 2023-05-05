@@ -21,6 +21,8 @@ Texture::~Texture() {
 }
 
 void Texture::setInterpolationMode(bool inter) {
+    //unused but was meant for greatness, could not figure out
+    //interpolation that was not too slow
     this->INTERPOLATE = inter;
 }
 
@@ -44,22 +46,36 @@ void Texture::plot(TextureBuffer* textureBuffer, double x, double y, double w, d
     }
 }
 
-void Texture::plot(TextureBuffer* textureBuffer, int x, int y, double scaleX, double scaleY, double ux1, double uy1, double ux2, double uy2, double rot, bool lighten) {
+void Texture::plot(TextureBuffer* textureBuffer,
+                   int x, int y,
+                   double scaleX, double scaleY,
+                   double ux1, double uy1,
+                   double ux2, double uy2,
+                   double rot, bool lighten) {
+    //precalc trig values
     double cos_rot = cos(rot);
     double sin_rot = sin(rot);
+
+    //plot visible pixels
     for(int i = 0; i < this->WIDTH * scaleX; i++) {
         for(int j = 0; j < this->HEIGHT * scaleY; j++) {
+            //get texture coordinates
             double sx = ((i / scaleX)*(ux2 - ux1)) + this->WIDTH*ux1;
             double sy = ((j / scaleY)*(uy2 - uy1)) + this->HEIGHT*uy1;
 
             int argb = this->getPixel(sx, sy);
+
+            //if the color is not a transparent one
             if(!(argb&0xff000000)) {
                 double nx = i - this->WIDTH*scaleX*0.5;
                 double ny = j - this->HEIGHT*scaleY*0.5;
 
+                //calculate pixel coordinates on buffer, rot only really works
+                //when it is at 90 degree angles
                 int x_pos = nx*cos_rot - ny*sin_rot + x;
                 int y_pos = nx*sin_rot + ny*cos_rot + y;
 
+                //can be lightened using a boolean
                 if(lighten) {
                     int r = ((((argb&0xff0000) >> 16) + 255)/2) & 0xff;
                     int g = ((((argb&0xff00) >> 8) + 255) / 2) & 0xff;
@@ -68,6 +84,7 @@ void Texture::plot(TextureBuffer* textureBuffer, int x, int y, double scaleX, do
                     argb = (r<<16) | (g << 8) | b;
                 }
 
+                //write the pixel to the texture buffer
                 textureBuffer->writePixel(x_pos, y_pos, argb);
             }
         }

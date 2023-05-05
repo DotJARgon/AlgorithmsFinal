@@ -10,8 +10,9 @@
 
 #include "Piece.h"
 
-//actually likely not necessary but here in case
+
 bool matches(Edge e1, Edge e2) {
+    //tests all matching edge types!
     if(e1 == FLAT) return e2 == FLAT;
     if(e1 == CIRCLE_INLET) return e2 == CIRCLE_OUTLET;
     if(e1 == CIRCLE_OUTLET) return e2 == CIRCLE_INLET;
@@ -22,6 +23,7 @@ bool matches(Edge e1, Edge e2) {
 
 
 Piece::Piece(Edge left, Edge top, Edge right, Edge bottom) {
+    //initialize default values!
     this->left = left;
     this->top = top;
     this->right = right;
@@ -47,11 +49,14 @@ Piece::Piece(Edge left, Edge top, Edge right, Edge bottom) {
 }
 
 void Piece::setGrid() {
+    //sets its own grid position on board!
     this->gridx = int(2.0*this->x * this->rows);
     this->gridy = int(this->y * this->cols);
 }
 
 void Piece::rotateEdgesRight() {
+    //swaps all edges to create a right rotation
+    //effect
     Edge temp = this->bottom;
     this->bottom = this->right;
     this->right = this->top;
@@ -59,6 +64,8 @@ void Piece::rotateEdgesRight() {
     this->left = temp;
 }
 void Piece::rotateEdgesLeft() {
+    //swaps all edges to create a left rotation
+    //effect
     Edge temp = this->left;
     this->left = this->top;
     this->top = this->right;
@@ -66,6 +73,8 @@ void Piece::rotateEdgesLeft() {
     this->bottom = temp;
 }
 void Piece::rotate(Rotate rotation) {
+    //this puts the rotation from 0-3, 0 being 0 degrees, and 3 being
+    //270 degrees
     if(rotation == LEFT_ROT) this->rotation = (this->rotation + 3) % 4;
     else if(rotation == RIGHT_ROT) this->rotation = (this->rotation + 1) % 4;
 
@@ -75,21 +84,27 @@ void Piece::rotate(Rotate rotation) {
 
 
 bool Piece::isAdjacent(Piece* piece) {
+    //get delta
     int dx = piece->gridx - this->gridx;
     int dy = piece->gridy - this->gridy;
-    //if one away
+    //if one away from myself
     return (abs(dx) == 1 && dy == 0) || (abs(dy) == 1 && dx == 0);
 }
 
 bool Piece::canInterlock(Piece* piece) {
+    //get deltas
     int dx = piece->gridx - this->gridx;
     int dy = piece->gridy - this->gridy;
-    //if one away
+    //if one away from myself
     if(abs(dx) == 1 || abs(dy) == 1) {
-        if(dx == 1 && dy == 0)  return matches(this->right, piece->left); //piece is right
-        if(dx == -1 && dy == 0) return matches(this->left, piece->right); //piece is left
-        if(dy == 1 && dx == 0)  return matches(this->bottom, piece->top); //piece is above
-        if(dy == -1 && dx == 0) return matches(this->top, piece->bottom); //piece is below
+        if(dx == 1 && dy == 0)
+            return matches(this->right, piece->left); //piece is right
+        if(dx == -1 && dy == 0)
+            return matches(this->left, piece->right); //piece is left
+        if(dy == 1 && dx == 0)
+            return matches(this->bottom, piece->top); //piece is above
+        if(dy == -1 && dx == 0)
+            return matches(this->top, piece->bottom); //piece is below
     }
     return false;
 }
@@ -101,7 +116,8 @@ bool Piece::areNeighbors(Piece* piece) {
     int ady = piece->absy - this->absy;
     //if their absolute positions are not adjacent, then it should return false
     //immediately
-    if(!((abs(adx) == 1 && ady == 0) || (abs(ady) == 1 && adx == 0))) return false;
+    if(!((abs(adx) == 1 && ady == 0) || (abs(ady) == 1 && adx == 0)))
+        return false;
     //if they are adjacent we can check if they are neighbors
     if(adj) {
         //if the rotations match
@@ -153,15 +169,24 @@ void Piece::drawSelf(PieceTexture* texture, PlotterTexture* screen) {
         double yT = double(gridy) / this->cols + 0.5 / this->cols;
 
         double r = this->rotation*3.1415926535 / 2.0;
-        texture->plot(this, screen, xT*screen->WIDTH, yT*screen->HEIGHT, scaleX, scaleY, ux, uy, ux + width, uy + height, r, true);
+        texture->plot(this, screen,
+                      xT*screen->WIDTH, yT*screen->HEIGHT,
+                      scaleX, scaleY, ux, uy,
+                      ux + width, uy + height, r, true);
 
-        texture->plot(this, screen, this->x*screen->WIDTH, this->y*screen->HEIGHT, scaleX, scaleY, ux, uy, ux + width, uy + height, r, false);
+        texture->plot(this, screen,
+                      this->x*screen->WIDTH, this->y*screen->HEIGHT,
+                      scaleX, scaleY, ux, uy, ux + width,
+                      uy + height, r, false);
     }
     else {
         double xT = 0.5*double(gridx) / this->rows + 0.25 / this->rows;
         double yT = double(gridy) / this->cols + 0.5 / this->cols;
 
         double r = this->rotation*3.1415926535 / 2.0;
-        texture->plot(this, screen, xT*screen->WIDTH, yT*screen->HEIGHT, scaleX, scaleY, ux, uy, ux + width, uy + height, r, false);
+        texture->plot(this, screen,
+                      xT*screen->WIDTH, yT*screen->HEIGHT,
+                      scaleX, scaleY, ux, uy,
+                      ux + width, uy + height, r, false);
     }
 }

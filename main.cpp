@@ -19,10 +19,7 @@
 
 using namespace std;
 
-int main(int argc, char ** argv)
-{
-
-
+int main(int argc, char ** argv) {
     bool enterHit = false;
 
 
@@ -44,9 +41,6 @@ int main(int argc, char ** argv)
                                "room.txt", "easterIsland.txt",
                                "musicians.txt"};
     int userInputDif, userInputPic;
-
- //Commented out Menu The kbhit isnt working for me. I left the template for
- // the 3 menus Look at Text.cpp for the implementation All test must be Capital letters only.
 
     //Main Menu
     while(!g->getQuit() && !enterHit){
@@ -262,11 +256,13 @@ int main(int argc, char ** argv)
             return 0;
     }
 
-    // Load the selected image using TextureLoader and save as PieceTexture object
+    // Load the selected image using TextureLoader and save as
+    // PieceTexture object
     PieceTexture *puzzle = TextureLoader::loadImage<PieceTexture>
         (fileNames.at(userInputPic));
 
-    // Create Board object using user-defined difficulty, plotter, puzzle, and soundHandler objects
+    // Create Board object using user-defined difficulty,
+    // plotter, puzzle, and soundHandler objects
     Board board(userInputDif, userInputDif,
                 &plotter, puzzle, soundHandler);
 
@@ -283,7 +279,8 @@ int main(int argc, char ** argv)
         // Get the current system time in nanoseconds
         long long t1 = std::chrono::system_clock::
         now().time_since_epoch().count();
-        // If 500 milliseconds have passed and the music has not started playing yet
+        // If 500 milliseconds have passed and the
+        // music has not started playing yet
         if (t1 - start > 500000000 && !started) {
             started = true;
             soundHandler->playMusic();// Start playing background music
@@ -291,7 +288,6 @@ int main(int argc, char ** argv)
         plotter.clear(0);   // Clear the plotter buffer
         board.step();   // Advance the game state by one step.
         board.draw();   // Draw the game board.
-        long long t2 = std::chrono::system_clock::now().time_since_epoch().count();
 
         // Update the SDL window with the new drawing.
         g->update();

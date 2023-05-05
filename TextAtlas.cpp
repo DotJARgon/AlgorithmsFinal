@@ -46,6 +46,7 @@ void TextAtlas::plot(TextureBuffer* textureBuffer, double x, double y, double w,
 }
 
 void TextAtlas::plot(TextureBuffer* textureBuffer, int x, int y, double scaleX, double scaleY, double ux1, double uy1, double ux2, double uy2, double rot) {
+    //unused!
 }
 
 void TextAtlas::replaceData(int* data) {

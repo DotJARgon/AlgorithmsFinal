@@ -10,8 +10,14 @@
 
 #include "PieceTexture.h"
 
-void PieceTexture::plot(Piece* p, TextureBuffer* textureBuffer, int x, int y, double scaleX, double scaleY, double ux1, double uy1, double ux2, double uy2, double rot, bool lighten) {
+void PieceTexture::plot(Piece* p, TextureBuffer* textureBuffer,
+                        int x, int y,
+                        double scaleX, double scaleY,
+                        double ux1, double uy1,
+                        double ux2, double uy2,
+                        double rot, bool lighten) {
 
+    //radius values for the runtime edge types
     double r = 0.01;
     double r2 = sqrt(r);
     
@@ -22,8 +28,10 @@ void PieceTexture::plot(Piece* p, TextureBuffer* textureBuffer, int x, int y, do
 
     for(int i = 0; i < this->WIDTH * scaleX * 1.5; i++) {
         for(int j = 0; j < this->HEIGHT * scaleY * 1.5; j++) {
-            double sx = ((i / (scaleX))*(ux2 - ux1)) + this->WIDTH*ux1 - this->WIDTH*(ux2-ux1)*0.25;
-            double sy = ((j / (scaleY))*(uy2 - uy1)) + this->HEIGHT*uy1 - this->HEIGHT*(uy2-uy1)*0.25;
+            double sx = ((i / (scaleX))*(ux2 - ux1))
+                    + this->WIDTH*ux1 - this->WIDTH*(ux2-ux1)*0.25;
+            double sy = ((j / (scaleY))*(uy2 - uy1))
+                    + this->HEIGHT*uy1 - this->HEIGHT*(uy2-uy1)*0.25;
 
             int argb = this->getPixel(sx, sy);
             if(!(argb&0xff000000)) {
@@ -44,7 +52,7 @@ void PieceTexture::plot(Piece* p, TextureBuffer* textureBuffer, int x, int y, do
                 double xp = (x_pos - x) / (this->WIDTH * scaleX);
                 double yp = (y_pos - y) / (this->HEIGHT * scaleY);
 
-                //parts to draw
+                //parts to draw sticking out! One case for each edge!
                 if(p->right == CIRCLE_OUTLET || p->right == SQUARE_OUTLET) {
                     double dx = xp-0.5;
                     double dy = yp;
@@ -55,7 +63,8 @@ void PieceTexture::plot(Piece* p, TextureBuffer* textureBuffer, int x, int y, do
                         }
                     }
                     else if(p->right == SQUARE_OUTLET) {
-                        if(abs(dx) < r2*correction  && abs(dy) < r2*correction) {
+                        if(abs(dx) < r2*correction
+                        && abs(dy) < r2*correction) {
                             textureBuffer->writePixel(x_pos, y_pos, argb);
                             continue;
                         }
@@ -71,7 +80,8 @@ void PieceTexture::plot(Piece* p, TextureBuffer* textureBuffer, int x, int y, do
                         }
                     }
                     else if(p->left == SQUARE_OUTLET) {
-                        if(abs(dx) < r2*correction  && abs(dy) < r2*correction) {
+                        if(abs(dx) < r2*correction
+                        && abs(dy) < r2*correction) {
                             textureBuffer->writePixel(x_pos, y_pos, argb);
                             continue;
                         }
@@ -87,7 +97,8 @@ void PieceTexture::plot(Piece* p, TextureBuffer* textureBuffer, int x, int y, do
                         }
                     }
                     else if(p->bottom == SQUARE_OUTLET) {
-                        if(abs(dx) < r2*correction  && abs(dy) < r2*correction) {
+                        if(abs(dx) < r2*correction
+                        && abs(dy) < r2*correction) {
                             textureBuffer->writePixel(x_pos, y_pos, argb);
                             continue;
                         }
@@ -103,7 +114,8 @@ void PieceTexture::plot(Piece* p, TextureBuffer* textureBuffer, int x, int y, do
                         }
                     }
                     else if(p->top == SQUARE_OUTLET) {
-                        if(abs(dx) < r2*correction  && abs(dy) < r2*correction) {
+                        if(abs(dx) < r2*correction
+                        && abs(dy) < r2*correction) {
                             textureBuffer->writePixel(x_pos, y_pos, argb);
                             continue;
                         }
@@ -114,29 +126,37 @@ void PieceTexture::plot(Piece* p, TextureBuffer* textureBuffer, int x, int y, do
                 if(p->right == CIRCLE_INLET || p->right == SQUARE_INLET) {
                     double dx = xp-0.5;
                     double dy = yp;
-                    if(p->right == CIRCLE_INLET) if(dx*dx + dy*dy < r) continue;
-                    if(p->right == SQUARE_INLET) if(abs(dx) < r2  && abs(dy) < r2) continue;
+                    if(p->right == CIRCLE_INLET)
+                        if(dx*dx + dy*dy < r) continue;
+                    if(p->right == SQUARE_INLET)
+                        if(abs(dx) < r2  && abs(dy) < r2) continue;
                 }
                 if(p->left == CIRCLE_INLET || p->left == SQUARE_INLET) {
                     double dx = xp+0.5;
                     double dy = yp;
-                    if(p->left == CIRCLE_INLET) if(dx*dx + dy*dy < r) continue;
-                    if(p->left == SQUARE_INLET) if(abs(dx) < r2  && abs(dy) < r2) continue;
+                    if(p->left == CIRCLE_INLET)
+                        if(dx*dx + dy*dy < r) continue;
+                    if(p->left == SQUARE_INLET)
+                        if(abs(dx) < r2  && abs(dy) < r2) continue;
                 }
                 if(p->bottom == CIRCLE_INLET || p->bottom == SQUARE_INLET) {
                     double dx = xp;
                     double dy = yp - 0.5;
-                    if(p->bottom == CIRCLE_INLET) if(dx*dx + dy*dy < r) continue;
-                    if(p->bottom == SQUARE_INLET) if(abs(dx) < r2  && abs(dy) < r2) continue;
+                    if(p->bottom == CIRCLE_INLET)
+                        if(dx*dx + dy*dy < r) continue;
+                    if(p->bottom == SQUARE_INLET)
+                        if(abs(dx) < r2  && abs(dy) < r2) continue;
                 }
                 if(p->top == CIRCLE_INLET || p->top == SQUARE_INLET) {
                     double dx = xp;
                     double dy = yp + 0.5;
-                    if(p->top == CIRCLE_INLET) if(dx*dx + dy*dy < r) continue;
-                    if(p->top == SQUARE_INLET) if(abs(dx) < r2  && abs(dy) < r2) continue;
+                    if(p->top == CIRCLE_INLET)
+                        if(dx*dx + dy*dy < r) continue;
+                    if(p->top == SQUARE_INLET)
+                        if(abs(dx) < r2  && abs(dy) < r2) continue;
                 }
 
-                //exclude extra
+                //exclude extra outside of bounds!
                 if(!(xp < -0.5 || xp > 0.5 || yp < -0.5 || yp > 0.5)) {
                     textureBuffer->writePixel(x_pos, y_pos, argb);
                 }
