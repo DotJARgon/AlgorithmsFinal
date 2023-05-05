@@ -22,6 +22,7 @@ private:
     PlotterTexture* plotter;
     PieceTexture* texture;
     SoundHandler* soundHandler;
+    Texture* background;
     int num_rows, num_cols;
     //double array of pieces, note, must cleanup eventually
     //x by y will be the coordinates
@@ -30,6 +31,7 @@ private:
     int mousex;
     int mousey;
     bool clicked;
+    bool winState;
 public:
     /*
      * description: This is Board constructor; This will generate fundamental layer of
@@ -74,6 +76,8 @@ public:
      * precondition:
      * postcondition:
      */
+    bool getWinState();
+
     ~Board();
 };
 

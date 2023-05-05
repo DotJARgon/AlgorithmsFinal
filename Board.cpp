@@ -10,6 +10,7 @@
 
 
 #include "Board.h"
+#include "TextureLoader.h"
 #include <random>
 
 /*
@@ -56,9 +57,12 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* 
     this->texture = texture;
     this->soundHandler = soundHandler;
 
+    this->background = TextureLoader::loadImage<Texture>("puzzle_place.txt");
+
     this->mousex = 0;
     this->mousey = 0;
     this->clicked = false;
+    this->winState = false;
 
     this->selected = nullptr;
 
@@ -70,11 +74,11 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* 
             Piece* piece = new Piece(FLAT, CIRCLE_OUTLET, FLAT, CIRCLE_INLET);
             piece->absx = j;
             piece->absy = i;
-            piece->gridx = j + num_rows;
-            piece->gridy = i;
+            piece->gridx = (rand()%num_rows) + num_rows;
+            piece->gridy = (rand()%num_cols);
 
-            piece->x = 0.5*double(j + num_rows) / num_rows + 0.25 / num_rows;
-            piece->y = double(i) / num_cols + 0.5 / num_cols;
+            piece->x = 0.5*double(piece->gridx) / num_rows + 0.25 / num_rows;
+            piece->y = double(piece->gridy) / num_cols + 0.5 / num_cols;
 
             piece->ux = double(j) / num_rows;
             piece->uy = double(i) / num_cols;
@@ -127,6 +131,7 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* 
     }
 
 }
+
 /*
      * description: Board Destructor
      * return: void
@@ -134,6 +139,18 @@ Board::Board(int num_rows, int num_cols, PlotterTexture* plotter, PieceTexture* 
      * postcondition:
      */
 Board::~Board() {}
+
+Board::~Board() {
+    //delete all pieces, only thing unique to this object
+    for(Piece* piece : this->board) {
+        delete piece;
+    }
+}
+
+bool Board::getWinState() {
+    return this->winState;
+}
+
 
 /*
      * description: validates winning scenario.
@@ -189,19 +206,22 @@ void Board::step() {
         bool allNeighbors = true;
         int neighborCount = 0;
         for(Piece* p : this->board) {
-            if(p != this->selected) {
-                if(p->gridx == this->selected->gridx && p->gridy == this->selected->gridy) {
-                    collision = true;
-                    break;
-                }
-                if(p->isAdjacent(this->selected)) {
-                    neighborCount++;
-                    if(!p->canInterlock(this->selected)) {
+            //does not check right side of board
+            if(p->gridx < this->num_rows) {
+                if(p != this->selected) {
+                    if(p->gridx == this->selected->gridx && p->gridy == this->selected->gridy) {
                         collision = true;
                         break;
                     }
-                    if(!this->selected->areNeighbors(p)) {
-                        allNeighbors = false;
+                    if(p->isAdjacent(this->selected)) {
+                        neighborCount++;
+                        if(!p->canInterlock(this->selected)) {
+                            collision = true;
+                            break;
+                        }
+                        if(!this->selected->areNeighbors(p)) {
+                            allNeighbors = false;
+                        }
                     }
                 }
             }
@@ -209,6 +229,8 @@ void Board::step() {
         if(!collision) {
             this->selected->isSelected = false;
             this->selected = nullptr;
+
+            this->winState = checkWin();
 
             this->soundHandler->playDrop();
 
@@ -234,6 +256,13 @@ void Board::step() {
      * postcondition: board is populated with texture and plotter
      */
 void Board::draw() {
+    //this->background->plot(plotter, 0, 0, 0.5, 1.0);
+    for(int i = 0; i < plotter->HEIGHT; i++) {
+        for(int j = -1; j < 2; j++) {
+            this->plotter->writePixel(plotter->WIDTH / 2 + j, i, 0);
+        }
+
+    }
     for(Piece* p : this->board) {
         if(p != this->selected) p->drawSelf(texture, plotter);
     }

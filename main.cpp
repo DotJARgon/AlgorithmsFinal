@@ -18,16 +18,16 @@
 
 using namespace std;
 
-int main(int argc, char ** argv)
-{
+int main(int argc, char ** argv) {
     //Texture* texture = TextureLoader::test<Texture>(20, 30);
 
     // Set the filenames of the images to be used as the puzzle pieces
-    vector<string> fileName = {"lion.txt", "hogsmeade.txt",
-                               "baylorRockWall.txt",
-                               "windows7.txt", "starryNight.txt",
-                               "Texas.txt", "TATE.txt",
-                               "room.txt", "easterIsland.txt"};
+    vector <string> fileName = {"lion.txt", "hogsmeade.txt",
+                                "baylorRockWall.txt",
+                                "windows7.txt", "starryNight.txt",
+                                "Texas.txt", "TATE.txt",
+                                "room.txt", "easterIsland.txt",
+                                "musicians.txt"};
     int userInputDif, userInputPic;
     //TODO Just doing this console input until we get the texture
     // class working for SDL if we do
@@ -38,7 +38,7 @@ int main(int argc, char ** argv)
     cin >> userInputDif;
 
     // Convert user input to appropriate dimensions
-    switch (userInputDif){
+    switch (userInputDif) {
         case 1:
             userInputDif = 2;
             break;
@@ -55,19 +55,19 @@ int main(int argc, char ** argv)
 
     // Ask the user for the image to use for the puzzle pieces
     cout << "What picture would you like to use?" << endl;
-    for(int i = 0; i < fileName.size(); i++){
+    for (int i = 0; i < fileName.size(); i++) {
         cout << i + 1 << ".) " << fileName.at(i) << endl;
     }
     cout << endl;
     cin >> userInputPic;
 
     // Load the selected image using TextureLoader and save as PieceTexture object
-    PieceTexture* puzzle = TextureLoader::loadImage<PieceTexture>
-            (fileName.at(userInputPic - 1));
+    PieceTexture *puzzle = TextureLoader::loadImage<PieceTexture>
+        (fileName.at(userInputPic - 1));
 
     // Create SDL_Plotter object and SoundHandler object
-    SDL_Plotter* g = new SDL_Plotter(500,1000);
-    SoundHandler* soundHandler = new SoundHandler(g);
+    SDL_Plotter *g = new SDL_Plotter(500, 1000);
+    SoundHandler *soundHandler = new SoundHandler(g);
 
     // Create PlotterTexture object using SDL_Plotter object
     PlotterTexture plotter(g);
@@ -78,29 +78,37 @@ int main(int argc, char ** argv)
 
     // Start the timer for playing background music
     long long start = std::chrono::system_clock::
-            now().time_since_epoch().count();
+    now().time_since_epoch().count();
     bool started = false;
 
+
     // While the user has not quit the game and the puzzle has not been solved
-    while (!g->getQuit() && !board.checkWin()){
+    while (!g->getQuit() && !board.checkWin()) {
         // Start playing background music after a set time has elapsed
-        long long t1 = std::chrono::system_clock::
-                now().time_since_epoch().count();
-        if(t1 - start > 500000000 && !started) {
-            started = true;
-            soundHandler->playMusic();
-        }
-        plotter.clear(0);   // Clear the plotter buffer
-        board.step();   // Advance the game state by one step.
-        board.draw();   // Draw the game board.
-        long long t2 = std::chrono::system_clock::now().time_since_epoch().count();
 
-        // Update the SDL window with the new drawing.
-        g->update();
-    }
+        // Loop while the game is not won and the user has not quit
+        while (!g->getQuit() && !board.getWinState()) {
+            // Get the current system time in nanoseconds
+            long long t1 = std::chrono::system_clock::
+            now().time_since_epoch().count();
+            // If 500 milliseconds have passed and the music has not started playing yet
+            if (t1 - start > 500000000 && !started) {
+                started = true;
+                soundHandler->playMusic();// Start playing background music
+            }
+            }// End of inner while loop
+            plotter.clear(0);   // Clear the plotter buffer
+            board.step();   // Advance the game state by one step.
+            board.draw();   // Draw the game board.
+            long long t2 = std::chrono::system_clock::now().time_since_epoch().count();
 
-    // Pause the game for 6 seconds before terminating.
-    sleep(6);
+            // Update the SDL window with the new drawing.
+            g->update();
+        }// End of outer while loop
 
-    return 0;
+        // Pause the game for 6 seconds before terminating.
+        sleep(6);
+
+        return 0;
 }
+
