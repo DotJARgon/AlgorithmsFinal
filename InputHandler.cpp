@@ -1,7 +1,12 @@
-//
-// Created by Marcelo on 1/25/2023.
-//
-
+/*
+* Author: Team Team (Tristan Brown, Marcelo Carpenter, Thomas Cho,
+*          Joshua Linnett, Aaron Mendoza, Harrison Williams)
+* Assignment Title: Jigsaw Puzzle Group Project
+* Assignment Description: This is inputHandler implementation file
+* Due Date: 5/4/2023
+* Date Created: 4/27/2023
+* Date Last Modified: 5/4/2023
+ */
 #include <SDL_thread.h>
 #include "InputHandler.h"
 
